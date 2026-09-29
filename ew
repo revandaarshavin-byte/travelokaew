@@ -1,0 +1,6015 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TravelKu - Travel Booking</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+:root{
+ --primary:#0194f3;
+ --primary2:#0077d9;
+ --orange:#ff5e1f;
+ --green:#20b26b;
+ --red:#ff4d4f;
+ --yellow:#ffb400;
+ --dark:#172033;
+ --text:#344054;
+ --muted:#667085;
+ --bg:#f4f7fa;
+ --white:#fff;
+ --border:#e1e5eb;
+ --shadow:0 8px 30px rgba(16,24,40,.09);
+ --radius:14px;
+}
+
+*{
+ box-sizing:border-box;
+ margin:0;
+ padding:0;
+ font-family:'Open Sans',sans-serif;
+}
+
+html{scroll-behavior:smooth}
+
+body{
+ background:var(--bg);
+ color:var(--text);
+ transition:.25s;
+}
+
+body.dark{
+ --bg:#101722;
+ --white:#182230;
+ --dark:#fff;
+ --text:#e7edf5;
+ --muted:#9ba8b8;
+ --border:#293545;
+ --shadow:0 8px 30px rgba(0,0,0,.3);
+}
+
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
+img{max-width:100%}
+
+.hidden{display:none!important}
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+#loader{
+ position:fixed;
+ inset:0;
+ background:var(--white);
+ z-index:999999;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ flex-direction:column;
+ gap:15px;
+}
+
+.loader-logo{
+ color:var(--primary);
+ font-size:30px;
+ font-weight:800;
+}
+
+.spinner{
+ width:45px;
+ height:45px;
+ border:4px solid #dcefff;
+ border-top-color:var(--primary);
+ border-radius:50%;
+ animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+ to{transform:rotate(360deg)}
+}
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+#toast{
+ position:fixed;
+ top:85px;
+ right:20px;
+ z-index:99999;
+ display:flex;
+ flex-direction:column;
+ gap:10px;
+}
+
+.toast-item{
+ background:#222;
+ color:#fff;
+ padding:13px 17px;
+ border-radius:10px;
+ box-shadow:var(--shadow);
+ animation:toastIn .3s ease;
+ min-width:240px;
+ font-size:13px;
+}
+
+.toast-item.success{background:var(--green)}
+.toast-item.error{background:var(--red)}
+.toast-item.info{background:var(--primary)}
+
+@keyframes toastIn{
+ from{transform:translateX(120%);opacity:0}
+ to{transform:translateX(0);opacity:1}
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+header{
+ position:sticky;
+ top:0;
+ z-index:5000;
+ background:var(--white);
+ border-bottom:1px solid var(--border);
+}
+
+.nav{
+ max-width:1250px;
+ margin:auto;
+ padding:12px 20px;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:20px;
+}
+
+.logo{
+ color:var(--primary);
+ font-size:24px;
+ font-weight:800;
+ display:flex;
+ align-items:center;
+ gap:8px;
+ cursor:pointer;
+}
+
+.logo small{
+ color:var(--orange);
+ font-size:10px;
+ display:block;
+}
+
+.nav-menu{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ list-style:none;
+}
+
+.nav-link{
+ padding:9px 11px;
+ border-radius:8px;
+ font-size:13px;
+ font-weight:700;
+ cursor:pointer;
+}
+
+.nav-link:hover{
+ background:#eaf6ff;
+ color:var(--primary);
+}
+
+.nav-actions{
+ display:flex;
+ align-items:center;
+ gap:8px;
+}
+
+.icon-btn{
+ width:38px;
+ height:38px;
+ border:1px solid var(--border);
+ background:var(--white);
+ color:var(--text);
+ border-radius:9px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ position:relative;
+}
+
+.badge-count{
+ position:absolute;
+ right:-4px;
+ top:-5px;
+ background:var(--red);
+ color:white;
+ width:18px;
+ height:18px;
+ border-radius:50%;
+ font-size:10px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+}
+
+.btn{
+ border:0;
+ padding:10px 15px;
+ border-radius:8px;
+ font-weight:700;
+ font-size:13px;
+}
+
+.btn-primary{
+ background:var(--primary);
+ color:#fff;
+}
+
+.btn-primary:hover{background:var(--primary2)}
+
+.btn-orange{
+ background:var(--orange);
+ color:#fff;
+}
+
+.btn-orange:hover{filter:brightness(.92)}
+
+.btn-light{
+ background:#eaf6ff;
+ color:var(--primary);
+}
+
+.btn-danger{
+ background:var(--red);
+ color:#fff;
+}
+
+.btn-success{
+ background:var(--green);
+ color:#fff;
+}
+
+.btn-outline{
+ background:transparent;
+ border:1px solid var(--border);
+ color:var(--text);
+}
+
+.avatar{
+ width:38px;
+ height:38px;
+ border-radius:50%;
+ background:linear-gradient(135deg,var(--primary),#6cc8ff);
+ color:white;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-weight:800;
+ cursor:pointer;
+}
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero{
+ min-height:490px;
+ background:
+ linear-gradient(120deg,rgba(0,82,150,.95),rgba(0,157,245,.65)),
+ url("https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1800&q=85");
+ background-size:cover;
+ background-position:center;
+ color:#fff;
+ padding:70px 20px 100px;
+}
+
+.hero-inner{
+ max-width:1200px;
+ margin:auto;
+}
+
+.hero h1{
+ max-width:720px;
+ font-size:45px;
+ line-height:1.15;
+ margin-bottom:15px;
+}
+
+.hero p{
+ max-width:680px;
+ font-size:16px;
+ opacity:.94;
+ margin-bottom:25px;
+}
+
+.hero-tags{
+ display:flex;
+ flex-wrap:wrap;
+ gap:8px;
+}
+
+.hero-tag{
+ background:rgba(255,255,255,.15);
+ border:1px solid rgba(255,255,255,.25);
+ padding:8px 12px;
+ border-radius:30px;
+ font-size:12px;
+}
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+.search-wrapper{
+ max-width:1120px;
+ margin:-75px auto 0;
+ padding:0 20px;
+ position:relative;
+ z-index:10;
+}
+
+.search-box{
+ background:var(--white);
+ border-radius:16px;
+ box-shadow:0 15px 45px rgba(0,0,0,.18);
+ overflow:hidden;
+}
+
+.search-tabs{
+ display:flex;
+ overflow:auto;
+ border-bottom:1px solid var(--border);
+}
+
+.search-tab{
+ min-width:130px;
+ flex:1;
+ border:0;
+ background:transparent;
+ padding:17px 12px;
+ font-weight:800;
+ color:var(--muted);
+ border-bottom:3px solid transparent;
+}
+
+.search-tab.active{
+ color:var(--primary);
+ border-bottom-color:var(--primary);
+}
+
+.search-form{
+ padding:20px;
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:12px;
+}
+
+.search-field{
+ display:flex;
+ flex-direction:column;
+ gap:6px;
+}
+
+.search-field label{
+ font-size:11px;
+ text-transform:uppercase;
+ font-weight:800;
+ color:var(--muted);
+}
+
+.search-field input,
+.search-field select{
+ width:100%;
+ padding:12px;
+ border:1px solid var(--border);
+ background:var(--white);
+ color:var(--text);
+ border-radius:9px;
+ outline:none;
+}
+
+.search-field input:focus,
+.search-field select:focus{
+ border-color:var(--primary);
+ box-shadow:0 0 0 3px rgba(1,148,243,.1);
+}
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.container{
+ max-width:1200px;
+ margin:auto;
+ padding:0 20px;
+}
+
+.section{
+ margin:40px auto;
+}
+
+.section-head{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:15px;
+ margin-bottom:18px;
+}
+
+.section-head h2{
+ font-size:22px;
+ color:var(--dark);
+}
+
+.section-head p{
+ font-size:12px;
+ color:var(--muted);
+}
+
+.view-all{
+ color:var(--primary);
+ font-size:13px;
+ font-weight:800;
+ cursor:pointer;
+}
+
+/* =====================================================
+   SHORTCUTS
+===================================================== */
+
+.shortcuts{
+ display:grid;
+ grid-template-columns:repeat(6,1fr);
+ gap:12px;
+}
+
+.shortcut{
+ background:var(--white);
+ border:1px solid var(--border);
+ padding:18px 10px;
+ border-radius:13px;
+ text-align:center;
+ cursor:pointer;
+ transition:.2s;
+ box-shadow:0 3px 10px rgba(0,0,0,.03);
+}
+
+.shortcut:hover{
+ transform:translateY(-5px);
+ border-color:#bde4ff;
+ box-shadow:var(--shadow);
+}
+
+.shortcut-icon{
+ width:48px;
+ height:48px;
+ margin:0 auto 9px;
+ border-radius:14px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ background:#eaf6ff;
+ color:var(--primary);
+ font-size:20px;
+}
+
+.shortcut:nth-child(2) .shortcut-icon{
+ background:#fff1ea;
+ color:var(--orange);
+}
+
+.shortcut:nth-child(3) .shortcut-icon{
+ background:#ecfff4;
+ color:var(--green);
+}
+
+.shortcut:nth-child(4) .shortcut-icon{
+ background:#fff8dc;
+ color:#d79400;
+}
+
+.shortcut:nth-child(5) .shortcut-icon{
+ background:#f3edff;
+ color:#7c4dff;
+}
+
+.shortcut:nth-child(6) .shortcut-icon{
+ background:#ffeef0;
+ color:var(--red);
+}
+
+.shortcut span{
+ display:block;
+ font-size:12px;
+ font-weight:800;
+}
+
+/* =====================================================
+   FLASH SALE
+===================================================== */
+
+.flash{
+ background:linear-gradient(110deg,#ff5e1f,#ff864c);
+ color:white;
+ border-radius:18px;
+ padding:20px;
+ overflow:hidden;
+}
+
+.flash-head{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin-bottom:16px;
+ gap:15px;
+}
+
+.flash-title{
+ display:flex;
+ align-items:center;
+ gap:10px;
+}
+
+.flash-title h2{
+ font-size:22px;
+}
+
+.countdown{
+ display:flex;
+ gap:6px;
+}
+
+.time-box{
+ background:rgba(0,0,0,.22);
+ border-radius:7px;
+ min-width:40px;
+ padding:6px;
+ text-align:center;
+}
+
+.time-box b{
+ font-size:17px;
+ display:block;
+}
+
+.time-box small{
+ font-size:8px;
+}
+
+.flash-grid{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:12px;
+}
+
+.flash-card{
+ background:white;
+ color:var(--text);
+ border-radius:12px;
+ overflow:hidden;
+ position:relative;
+}
+
+.flash-img{
+ height:135px;
+ background-size:cover;
+ background-position:center;
+}
+
+.flash-body{
+ padding:12px;
+}
+
+.flash-body h3{
+ font-size:14px;
+ margin-bottom:4px;
+}
+
+.old-price{
+ text-decoration:line-through;
+ color:#999;
+ font-size:11px;
+}
+
+.flash-price{
+ color:var(--orange);
+ font-weight:800;
+ font-size:16px;
+}
+
+.discount-badge{
+ position:absolute;
+ top:10px;
+ left:10px;
+ background:var(--red);
+ color:white;
+ padding:5px 7px;
+ border-radius:6px;
+ font-size:10px;
+ font-weight:800;
+}
+
+/* =====================================================
+   DESTINATION CARDS
+===================================================== */
+
+.dest-grid{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:15px;
+}
+
+.dest-card{
+ background:var(--white);
+ border-radius:14px;
+ overflow:hidden;
+ border:1px solid var(--border);
+ box-shadow:0 4px 12px rgba(0,0,0,.04);
+ transition:.2s;
+ cursor:pointer;
+ position:relative;
+}
+
+.dest-card:hover{
+ transform:translateY(-4px);
+ box-shadow:var(--shadow);
+}
+
+.dest-img{
+ height:190px;
+ background-size:cover;
+ background-position:center;
+}
+
+.dest-info{
+ padding:13px;
+}
+
+.dest-info h3{
+ font-size:15px;
+ color:var(--dark);
+}
+
+.dest-info p{
+ color:var(--muted);
+ font-size:11px;
+ margin-top:3px;
+}
+
+.rating{
+ color:#ffb400;
+ font-size:12px;
+ margin-top:6px;
+}
+
+.rating span{
+ color:var(--muted);
+ margin-left:3px;
+}
+
+.heart{
+ position:absolute;
+ right:10px;
+ top:10px;
+ width:35px;
+ height:35px;
+ background:rgba(255,255,255,.95);
+ color:#888;
+ border:0;
+ border-radius:50%;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ z-index:2;
+}
+
+.heart.active{
+ color:var(--red);
+}
+
+/* =====================================================
+   PRODUCT GRID
+===================================================== */
+
+.product-grid{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:15px;
+}
+
+.product-card{
+ background:var(--white);
+ border:1px solid var(--border);
+ border-radius:13px;
+ overflow:hidden;
+ position:relative;
+ transition:.2s;
+}
+
+.product-card:hover{
+ transform:translateY(-3px);
+ box-shadow:var(--shadow);
+}
+
+.product-img{
+ height:170px;
+ background-size:cover;
+ background-position:center;
+}
+
+.product-body{
+ padding:14px;
+}
+
+.product-body h3{
+ font-size:14px;
+ color:var(--dark);
+ margin-bottom:5px;
+}
+
+.product-meta{
+ font-size:11px;
+ color:var(--muted);
+}
+
+.product-price{
+ color:var(--orange);
+ font-size:17px;
+ font-weight:800;
+ margin:8px 0;
+}
+
+.product-actions{
+ display:flex;
+ gap:7px;
+}
+
+/* =====================================================
+   PROMO
+===================================================== */
+
+.promo-grid{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:15px;
+}
+
+.promo-card{
+ min-height:180px;
+ border-radius:14px;
+ background-size:cover;
+ background-position:center;
+ color:white;
+ padding:22px;
+ position:relative;
+ overflow:hidden;
+}
+
+.promo-card:before{
+ content:"";
+ position:absolute;
+ inset:0;
+ background:linear-gradient(90deg,rgba(0,0,0,.75),rgba(0,0,0,.05));
+}
+
+.promo-content{
+ position:relative;
+ z-index:1;
+ max-width:80%;
+}
+
+.promo-content h3{
+ font-size:19px;
+ margin-bottom:5px;
+}
+
+.promo-content p{
+ font-size:12px;
+ opacity:.9;
+}
+
+/* =====================================================
+   REVIEWS
+===================================================== */
+
+.review-grid{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:15px;
+}
+
+.review-card{
+ background:var(--white);
+ border:1px solid var(--border);
+ border-radius:13px;
+ padding:18px;
+}
+
+.review-user{
+ display:flex;
+ gap:10px;
+ align-items:center;
+ margin-bottom:12px;
+}
+
+.review-avatar{
+ width:40px;
+ height:40px;
+ border-radius:50%;
+ background:#eaf6ff;
+ color:var(--primary);
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-weight:800;
+}
+
+.review-card p{
+ font-size:12px;
+ line-height:1.7;
+ color:var(--muted);
+}
+
+/* =====================================================
+   NEWSLETTER
+===================================================== */
+
+.newsletter{
+ background:linear-gradient(120deg,#006bc7,#0194f3);
+ color:white;
+ border-radius:18px;
+ padding:30px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:20px;
+}
+
+.newsletter h2{
+ margin-bottom:5px;
+}
+
+.newsletter p{
+ font-size:12px;
+ opacity:.9;
+}
+
+.newsletter-form{
+ display:flex;
+ gap:8px;
+ min-width:350px;
+}
+
+.newsletter-form input{
+ flex:1;
+ padding:12px;
+ border:0;
+ border-radius:8px;
+ outline:none;
+}
+
+/* =====================================================
+   RESULTS
+===================================================== */
+
+#resultsPage{
+ display:none;
+}
+
+.results-layout{
+ display:grid;
+ grid-template-columns:240px 1fr;
+ gap:18px;
+}
+
+.filter-card{
+ background:var(--white);
+ border:1px solid var(--border);
+ border-radius:13px;
+ padding:17px;
+ height:max-content;
+ position:sticky;
+ top:80px;
+}
+
+.filter-card h3{
+ margin-bottom:15px;
+}
+
+.filter-group{
+ margin-bottom:18px;
+}
+
+.filter-group label{
+ font-size:11px;
+ font-weight:800;
+ display:block;
+ margin-bottom:6px;
+ color:var(--muted);
+}
+
+.filter-group input,
+.filter-group select{
+ width:100%;
+ padding:9px;
+ border:1px solid var(--border);
+ border-radius:7px;
+ background:var(--white);
+ color:var(--text);
+}
+
+.results-toolbar{
+ background:var(--white);
+ padding:13px;
+ border:1px solid var(--border);
+ border-radius:12px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin-bottom:13px;
+}
+
+.results-list{
+ display:flex;
+ flex-direction:column;
+ gap:12px;
+}
+
+.result-item{
+ background:var(--white);
+ border:1px solid var(--border);
+ border-radius:13px;
+ padding:15px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:15px;
+}
+
+.result-left{
+ display:flex;
+ align-items:center;
+ gap:13px;
+}
+
+.result-icon{
+ width:50px;
+ height:50px;
+ border-radius:12px;
+ background:#eaf6ff;
+ color:var(--primary);
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:20px;
+}
+
+.result-info h3{
+ font-size:15px;
+ color:var(--dark);
+}
+
+.result-info p{
+ color:var(--muted);
+ font-size:11px;
+ margin-top:3px;
+}
+
+.result-right{
+ text-align:right;
+}
+
+.result-right strong{
+ color:var(--orange);
+ display:block;
+ margin-bottom:7px;
+}
+
+/* =====================================================
+   PAGES
+===================================================== */
+
+.page{
+ max-width:1200px;
+ margin:30px auto;
+ padding:0 20px;
+ display:none;
+}
+
+.page.active{display:block}
+
+/* =====================================================
+   ORDERS
+===================================================== */
+
+.order-card{
+ background:var(--white);
+ border:1px solid var(--border);
+ border-radius:13px;
+ padding:18px;
+ margin-bottom:12px;
+}
+
+.order-top{
+ display:flex;
+ justify-content:space-between;
+ gap:15px;
+ padding-bottom:12px;
+ border-bottom:1px solid var(--border);
+}
+
+.order-id{
+ color:var(--primary);
+ font-weight:800;
+}
+
+.status{
+ padding:5px 9px;
+ border-radius:20px;
+ font-size:10px;
+ font-weight:800;
+}
+
+.status.success{
+ background:#e9fff3;
+ color:var(--green);
+}
+
+.order-body{
+ display:flex;
+ justify-content:space-between;
+ gap:20px;
+ padding-top:14px;
+}
+
+.order-body h3{
+ font-size:15px;
+ color:var(--dark);
+}
+
+.order-body p{
+ font-size:11px;
+ color:var(--muted);
+ margin-top:4px;
+}
+
+/* =====================================================
+   PROFILE
+===================================================== */
+
+.profile-grid{
+ display:grid;
+ grid-template-columns:280px 1fr;
+ gap:18px;
+}
+
+.profile-card,
+.setting-card{
+ background:var(--white);
+ border:1px solid var(--border);
+ border-radius:14px;
+ padding:20px;
+}
+
+.profile-big-avatar{
+ width:80px;
+ height:80px;
+ background:linear-gradient(135deg,var(--primary),#70caff);
+ color:white;
+ border-radius:50%;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:28px;
+ font-weight:800;
+ margin-bottom:12px;
+}
+
+.setting-row{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ padding:15px 0;
+ border-bottom:1px solid var(--border);
+}
+
+.setting-row:last-child{border-bottom:0}
+
+.setting-row h4{
+ font-size:13px;
+}
+
+.setting-row p{
+ font-size:11px;
+ color:var(--muted);
+}
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+.modal{
+ position:fixed;
+ inset:0;
+ background:rgba(0,0,0,.6);
+ z-index:9000;
+ display:none;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+}
+
+.modal.show{display:flex}
+
+.modal-box{
+ width:100%;
+ max-width:550px;
+ max-height:92vh;
+ overflow:auto;
+ background:var(--white);
+ color:var(--text);
+ border-radius:16px;
+ padding:22px;
+ box-shadow:0 20px 70px rgba(0,0,0,.25);
+}
+
+.modal-lg{max-width:850px}
+
+.modal-head{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ padding-bottom:13px;
+ border-bottom:1px solid var(--border);
+ margin-bottom:16px;
+}
+
+.modal-head h3{
+ color:var(--dark);
+}
+
+.close{
+ width:35px;
+ height:35px;
+ border:0;
+ background:transparent;
+ font-size:25px;
+ color:var(--muted);
+}
+
+.form-group{
+ margin-bottom:13px;
+}
+
+.form-group label{
+ display:block;
+ font-size:11px;
+ font-weight:800;
+ margin-bottom:5px;
+ color:var(--muted);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+ width:100%;
+ padding:11px;
+ border:1px solid var(--border);
+ background:var(--white);
+ color:var(--text);
+ border-radius:8px;
+ outline:none;
+}
+
+.form-group textarea{
+ min-height:90px;
+ resize:vertical;
+}
+
+.form-grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:12px;
+}
+
+.summary-box{
+ background:#f7f9fb;
+ border-radius:10px;
+ padding:14px;
+ margin-bottom:15px;
+}
+
+body.dark .summary-box{
+ background:#111a25;
+}
+
+.summary-row{
+ display:flex;
+ justify-content:space-between;
+ padding:5px 0;
+ font-size:12px;
+}
+
+.summary-total{
+ font-size:17px;
+ font-weight:800;
+ color:var(--orange);
+ border-top:1px solid var(--border);
+ margin-top:7px;
+ padding-top:10px;
+}
+
+/* =====================================================
+   ADMIN
+===================================================== */
+
+.admin-page{
+ max-width:1250px;
+ margin:25px auto;
+ padding:0 20px;
+ display:none;
+}
+
+.admin-page.active{display:block}
+
+.admin-layout{
+ display:grid;
+ grid-template-columns:230px 1fr;
+ gap:18px;
+}
+
+.admin-side{
+ background:var(--white);
+ border:1px solid var(--border);
+ border-radius:14px;
+ padding:12px;
+ height:max-content;
+ position:sticky;
+ top:80px;
+}
+
+.admin-side h3{
+ padding:10px;
+ margin-bottom:8px;
+}
+
+.admin-menu{
+ width:100%;
+ border:0;
+ background:transparent;
+ color:var(--text);
+ text-align:left;
+ padding:11px 12px;
+ border-radius:8px;
+ font-weight:700;
+ font-size:12px;
+ margin-bottom:3px;
+}
+
+.admin-menu:hover,
+.admin-menu.active{
+ background:#eaf6ff;
+ color:var(--primary);
+}
+
+.admin-content{
+ min-width:0;
+}
+
+.admin-section{
+ display:none;
+}
+
+.admin-section.active{
+ display:block;
+}
+
+.stats{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:12px;
+ margin-bottom:18px;
+}
+
+.stat-card{
+ background:var(--white);
+ border:1px solid var(--border);
+ border-radius:13px;
+ padding:18px;
+}
+
+.stat-card i{
+ font-size:20px;
+ color:var(--primary);
+}
+
+.stat-card h3{
+ font-size:24px;
+ margin:8px 0 2px;
+ color:var(--dark);
+}
+
+.stat-card p{
+ font-size:11px;
+ color:var(--muted);
+}
+
+.admin-card{
+ background:var(--white);
+ border:1px solid var(--border);
+ border-radius:14px;
+ padding:20px;
+ margin-bottom:18px;
+}
+
+.admin-card h2{
+ color:var(--dark);
+ margin-bottom:5px;
+}
+
+.admin-card .desc{
+ font-size:12px;
+ color:var(--muted);
+ margin-bottom:18px;
+}
+
+.admin-form{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:12px;
+}
+
+.admin-form .full{
+ grid-column:1/-1;
+}
+
+.table-wrap{
+ overflow:auto;
+}
+
+table{
+ width:100%;
+ border-collapse:collapse;
+}
+
+th,td{
+ border-bottom:1px solid var(--border);
+ padding:11px;
+ text-align:left;
+ font-size:11px;
+ white-space:nowrap;
+}
+
+th{
+ background:rgba(127,127,127,.06);
+ font-weight:800;
+}
+
+.admin-img{
+ width:65px;
+ height:42px;
+ border-radius:6px;
+ object-fit:cover;
+}
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+footer{
+ background:#111c2a;
+ color:#d9e2ec;
+ margin-top:60px;
+ padding:45px 20px 25px;
+}
+
+.footer-grid{
+ max-width:1200px;
+ margin:auto;
+ display:grid;
+ grid-template-columns:2fr 1fr 1fr 1fr;
+ gap:30px;
+}
+
+.footer-logo{
+ color:white;
+ font-size:22px;
+ font-weight:800;
+ margin-bottom:10px;
+}
+
+footer h3{
+ color:white;
+ font-size:14px;
+ margin-bottom:12px;
+}
+
+footer p,
+footer li{
+ color:#aebdcc;
+ font-size:11px;
+ line-height:2;
+ list-style:none;
+}
+
+.footer-bottom{
+ max-width:1200px;
+ margin:30px auto 0;
+ padding-top:20px;
+ border-top:1px solid #2a3745;
+ text-align:center;
+ color:#8292a3;
+ font-size:11px;
+}
+
+/* =====================================================
+   INVOICE
+===================================================== */
+
+.invoice{
+ background:white;
+ color:#222;
+ padding:25px;
+ border-radius:10px;
+}
+
+.invoice-head{
+ display:flex;
+ justify-content:space-between;
+ border-bottom:2px solid #eee;
+ padding-bottom:15px;
+ margin-bottom:20px;
+}
+
+.invoice-logo{
+ color:#0194f3;
+ font-size:24px;
+ font-weight:800;
+}
+
+.invoice-table{
+ width:100%;
+ margin-top:15px;
+ border-collapse:collapse;
+}
+
+.invoice-table td{
+ border-bottom:1px solid #eee;
+ padding:10px 0;
+ font-size:12px;
+}
+
+.invoice-total{
+ text-align:right;
+ margin-top:20px;
+ font-size:20px;
+ font-weight:800;
+ color:#ff5e1f;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:1000px){
+
+ .product-grid,
+ .dest-grid{
+  grid-template-columns:repeat(2,1fr);
+ }
+
+ .flash-grid{
+  grid-template-columns:repeat(2,1fr);
+ }
+
+ .shortcuts{
+  grid-template-columns:repeat(3,1fr);
+ }
+
+ .search-form{
+  grid-template-columns:repeat(2,1fr);
+ }
+
+ .footer-grid{
+  grid-template-columns:repeat(2,1fr);
+ }
+
+}
+
+@media(max-width:750px){
+
+ .nav{
+  padding:10px 12px;
+ }
+
+ .nav-menu{
+  display:none;
+ }
+
+ .logo{
+  font-size:20px;
+ }
+
+ .hero{
+  padding:50px 18px 100px;
+ }
+
+ .hero h1{
+  font-size:32px;
+ }
+
+ .search-wrapper{
+  padding:0 12px;
+ }
+
+ .search-form{
+  grid-template-columns:1fr;
+ }
+
+ .shortcuts{
+  grid-template-columns:repeat(2,1fr);
+ }
+
+ .flash-grid,
+ .product-grid,
+ .dest-grid,
+ .promo-grid,
+ .review-grid{
+  grid-template-columns:1fr;
+ }
+
+ .results-layout{
+  grid-template-columns:1fr;
+ }
+
+ .filter-card{
+  position:static;
+ }
+
+ .result-item{
+  flex-direction:column;
+  align-items:flex-start;
+ }
+
+ .result-right{
+  text-align:left;
+  width:100%;
+ }
+
+ .profile-grid{
+  grid-template-columns:1fr;
+ }
+
+ .admin-layout{
+  grid-template-columns:1fr;
+ }
+
+ .admin-side{
+  position:static;
+ }
+
+ .stats{
+  grid-template-columns:repeat(2,1fr);
+ }
+
+ .admin-form,
+ .form-grid{
+  grid-template-columns:1fr;
+ }
+
+ .newsletter{
+  flex-direction:column;
+  align-items:flex-start;
+ }
+
+ .newsletter-form{
+  min-width:0;
+  width:100%;
+ }
+
+ .order-body{
+  flex-direction:column;
+ }
+
+ .footer-grid{
+  grid-template-columns:1fr;
+ }
+
+ .countdown{
+  transform:scale(.85);
+  transform-origin:right;
+ }
+
+}
+
+@media(max-width:450px){
+
+ .stats{
+  grid-template-columns:1fr;
+ }
+
+ .hero h1{
+  font-size:27px;
+ }
+
+ .flash-head{
+  flex-direction:column;
+  align-items:flex-start;
+ }
+
+ .nav-actions .btn{
+  padding:8px;
+ }
+
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+ <div class="loader-logo">
+  <i class="fa-solid fa-plane-departure"></i> TravelKu
+ </div>
+ <div class="spinner"></div>
+ <small>Memuat aplikasi...</small>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- =====================================================
+ HEADER
+===================================================== -->
+
+<header>
+<nav class="nav">
+
+<div class="logo" onclick="goHome()">
+ <i class="fa-solid fa-plane-departure"></i>
+ <span id="logoText">TravelKu</span>
+</div>
+
+<ul class="nav-menu">
+
+<li class="nav-link" onclick="goHome()">
+ <i class="fa-solid fa-house"></i> Beranda
+</li>
+
+<li class="nav-link" onclick="showResults('hotel')">
+ <i class="fa-solid fa-hotel"></i> Hotel
+</li>
+
+<li class="nav-link" onclick="showResults('pesawat')">
+ <i class="fa-solid fa-plane"></i> Pesawat
+</li>
+
+<li class="nav-link" onclick="showResults('kereta')">
+ <i class="fa-solid fa-train"></i> Kereta
+</li>
+
+<li class="nav-link" onclick="showPage('ordersPage')">
+ <i class="fa-solid fa-receipt"></i> Pesanan
+</li>
+
+</ul>
+
+<div class="nav-actions">
+
+<button class="icon-btn" onclick="toggleDark()" title="Mode Gelap">
+ <i id="darkIcon" class="fa-solid fa-moon"></i>
+</button>
+
+<button class="icon-btn" onclick="showPage('wishlistPage')" title="Wishlist">
+ <i class="fa-regular fa-heart"></i>
+ <span class="badge-count" id="wishCount">0</span>
+</button>
+
+<div id="authArea">
+ <button class="btn btn-light" onclick="openAuth('login')">
+  Masuk
+ </button>
+</div>
+
+</div>
+
+</nav>
+</header>
+
+<!-- =====================================================
+ HOME
+===================================================== -->
+
+<main id="homePage">
+
+<section class="hero">
+
+<div class="hero-inner">
+
+<h1 id="heroTitle">
+ Eksplorasi Dunia Tanpa Batas ✈️
+</h1>
+
+<p id="heroSubtitle">
+ Temukan tiket pesawat, hotel, kereta api, dan pengalaman wisata terbaik dengan harga menarik.
+</p>
+
+<div class="hero-tags">
+ <span class="hero-tag">✈️ Tiket Pesawat</span>
+ <span class="hero-tag">🏨 Hotel</span>
+ <span class="hero-tag">🚆 Kereta</span>
+ <span class="hero-tag">🎟️ Atraksi</span>
+ <span class="hero-tag">🔥 Flash Sale</span>
+</div>
+
+</div>
+
+</section>
+
+<!-- SEARCH -->
+
+<div class="search-wrapper">
+
+<div class="search-box">
+
+<div class="search-tabs">
+
+<button class="search-tab active" onclick="switchSearch('pesawat',this)">
+ <i class="fa-solid fa-plane"></i> Pesawat
+</button>
+
+<button class="search-tab" onclick="switchSearch('hotel',this)">
+ <i class="fa-solid fa-hotel"></i> Hotel
+</button>
+
+<button class="search-tab" onclick="switchSearch('kereta',this)">
+ <i class="fa-solid fa-train"></i> Kereta
+</button>
+
+<button class="search-tab" onclick="switchSearch('atraksi',this)">
+ <i class="fa-solid fa-ticket"></i> Atraksi
+</button>
+
+</div>
+
+<form id="searchPesawat" class="search-form" onsubmit="doSearch(event,'pesawat')">
+
+<div class="search-field">
+<label>Dari</label>
+<input id="fromCity" value="Jakarta" required>
+</div>
+
+<div class="search-field">
+<label>Ke</label>
+<input id="toCity" value="Bali" required>
+</div>
+
+<div class="search-field">
+<label>Tanggal</label>
+<input id="flightDate" type="date" required>
+</div>
+
+<button class="btn btn-orange">
+ <i class="fa-solid fa-magnifying-glass"></i> Cari Pesawat
+</button>
+
+</form>
+
+<form id="searchHotel" class="search-form hidden" onsubmit="doSearch(event,'hotel')">
+
+<div class="search-field">
+<label>Kota / Hotel</label>
+<input id="hotelSearch" value="Bali" required>
+</div>
+
+<div class="search-field">
+<label>Check In</label>
+<input id="checkin" type="date" required>
+</div>
+
+<div class="search-field">
+<label>Check Out</label>
+<input id="checkout" type="date" required>
+</div>
+
+<button class="btn btn-orange">
+ <i class="fa-solid fa-magnifying-glass"></i> Cari Hotel
+</button>
+
+</form>
+
+<form id="searchKereta" class="search-form hidden" onsubmit="doSearch(event,'kereta')">
+
+<div class="search-field">
+<label>Dari</label>
+<input id="trainFrom" value="Gambir" required>
+</div>
+
+<div class="search-field">
+<label>Ke</label>
+<input id="trainTo" value="Bandung" required>
+</div>
+
+<div class="search-field">
+<label>Tanggal</label>
+<input id="trainDate" type="date" required>
+</div>
+
+<button class="btn btn-orange">
+ <i class="fa-solid fa-magnifying-glass"></i> Cari Kereta
+</button>
+
+</form>
+
+<form id="searchAtraksi" class="search-form hidden" onsubmit="doSearch(event,'atraksi')">
+
+<div class="search-field">
+<label>Destinasi</label>
+<input id="attrSearch" value="Bali" required>
+</div>
+
+<div class="search-field">
+<label>Tanggal</label>
+<input id="attrDate" type="date" required>
+</div>
+
+<div class="search-field">
+<label>Jumlah Orang</label>
+<select id="attrPeople">
+ <option>1</option>
+ <option>2</option>
+ <option>3</option>
+ <option>4</option>
+ <option>5+</option>
+</select>
+</div>
+
+<button class="btn btn-orange">
+ <i class="fa-solid fa-magnifying-glass"></i> Cari Atraksi
+</button>
+
+</form>
+
+</div>
+</div>
+
+<div class="container">
+
+<!-- SHORTCUT -->
+
+<section class="section">
+
+<div class="shortcuts">
+
+<div class="shortcut" onclick="switchSearch('pesawat')">
+ <div class="shortcut-icon"><i class="fa-solid fa-plane"></i></div>
+ <span>Pesawat</span>
+</div>
+
+<div class="shortcut" onclick="switchSearch('hotel')">
+ <div class="shortcut-icon"><i class="fa-solid fa-hotel"></i></div>
+ <span>Hotel</span>
+</div>
+
+<div class="shortcut" onclick="switchSearch('kereta')">
+ <div class="shortcut-icon"><i class="fa-solid fa-train"></i></div>
+ <span>Kereta</span>
+</div>
+
+<div class="shortcut" onclick="switchSearch('atraksi')">
+ <div class="shortcut-icon"><i class="fa-solid fa-ticket"></i></div>
+ <span>Atraksi</span>
+</div>
+
+<div class="shortcut" onclick="showPage('wishlistPage')">
+ <div class="shortcut-icon"><i class="fa-solid fa-heart"></i></div>
+ <span>Wishlist</span>
+</div>
+
+<div class="shortcut" onclick="showPage('ordersPage')">
+ <div class="shortcut-icon"><i class="fa-solid fa-receipt"></i></div>
+ <span>Pesanan</span>
+</div>
+
+</div>
+
+</section>
+
+<!-- FLASH SALE -->
+
+<section class="section">
+
+<div class="flash">
+
+<div class="flash-head">
+
+<div class="flash-title">
+ <span style="font-size:28px">🔥</span>
+ <div>
+  <h2>Flash Sale</h2>
+  <small>Harga spesial terbatas!</small>
+ </div>
+</div>
+
+<div class="countdown">
+
+<div class="time-box">
+ <b id="cdHour">00</b>
+ <small>JAM</small>
+</div>
+
+<div class="time-box">
+ <b id="cdMin">00</b>
+ <small>MENIT</small>
+</div>
+
+<div class="time-box">
+ <b id="cdSec">00</b>
+ <small>DETIK</small>
+</div>
+
+</div>
+
+</div>
+
+<div class="flash-grid" id="flashGrid"></div>
+
+</div>
+
+</section>
+
+<!-- DESTINASI -->
+
+<section class="section">
+
+<div class="section-head">
+
+<div>
+ <h2>🌏 Destinasi Populer</h2>
+ <p>Tempat yang sedang banyak dicari traveler</p>
+</div>
+
+<span class="view-all" onclick="showPage('destinationPage')">
+ Lihat Semua →
+</span>
+
+</div>
+
+<div class="dest-grid" id="destinationGrid"></div>
+
+</section>
+
+<!-- HOTEL -->
+
+<section class="section">
+
+<div class="section-head">
+
+<div>
+ <h2>🏨 Hotel Pilihan</h2>
+ <p>Penginapan nyaman untuk perjalananmu</p>
+</div>
+
+<span class="view-all" onclick="showResults('hotel')">
+ Lihat Semua →
+</span>
+
+</div>
+
+<div class="product-grid" id="hotelGrid"></div>
+
+</section>
+
+<!-- PROMO -->
+
+<section class="section">
+
+<div class="section-head">
+<div>
+ <h2>🎁 Promo Spesial</h2>
+ <p>Jangan sampai ketinggalan penawaran menarik</p>
+</div>
+</div>
+
+<div class="promo-grid" id="promoGrid"></div>
+
+</section>
+
+<!-- ATTRACTION -->
+
+<section class="section">
+
+<div class="section-head">
+
+<div>
+ <h2>🎢 Aktivitas & Atraksi</h2>
+ <p>Lengkapi perjalanan dengan pengalaman seru</p>
+</div>
+
+<span class="view-all" onclick="showResults('atraksi')">
+ Lihat Semua →
+</span>
+
+</div>
+
+<div class="product-grid" id="attractionGrid"></div>
+
+</section>
+
+<!-- REVIEWS -->
+
+<section class="section">
+
+<div class="section-head">
+<div>
+ <h2>⭐ Kata Mereka</h2>
+ <p>Pengalaman traveler menggunakan TravelKu</p>
+</div>
+</div>
+
+<div class="review-grid">
+
+<div class="review-card">
+<div class="review-user">
+ <div class="review-avatar">A</div>
+ <div>
+  <b>Andi Pratama</b>
+  <div class="rating">★★★★★</div>
+ </div>
+</div>
+<p>
+“Proses booking sangat gampang. Saya bisa cari hotel, lihat harga dan langsung pesan.”
+</p>
+</div>
+
+<div class="review-card">
+<div class="review-user">
+ <div class="review-avatar">S</div>
+ <div>
+  <b>Siti Rahma</b>
+  <div class="rating">★★★★★</div>
+ </div>
+</div>
+<p>
+“Fitur promo dan flash sale sangat membantu mendapatkan harga perjalanan yang lebih hemat.”
+</p>
+</div>
+
+<div class="review-card">
+<div class="review-user">
+ <div class="review-avatar">B</div>
+ <div>
+  <b>Budi Santoso</b>
+  <div class="rating">★★★★☆</div>
+ </div>
+</div>
+<p>
+“Tampilannya enak digunakan di HP. Semua pesanan juga tersimpan dengan rapi.”
+</p>
+</div>
+
+</div>
+
+</section>
+
+<!-- NEWSLETTER -->
+
+<section class="section">
+
+<div class="newsletter">
+
+<div>
+ <h2>Dapatkan Promo Terbaru ✈️</h2>
+ <p>Masukkan email untuk mendapatkan informasi promo dan penawaran spesial.</p>
+</div>
+
+<form class="newsletter-form" onsubmit="subscribe(event)">
+ <input type="email" placeholder="Email kamu..." required>
+ <button class="btn btn-orange">Berlangganan</button>
+</form>
+
+</div>
+
+</section>
+
+</div>
+
+</main>
+
+<!-- =====================================================
+ RESULTS PAGE
+===================================================== -->
+
+<section class="page" id="resultsPage">
+
+<div class="section-head">
+<div>
+ <h2 id="resultsTitle">Hasil Pencarian</h2>
+ <p id="resultsSubtitle">Temukan pilihan terbaik untuk perjalananmu</p>
+</div>
+<button class="btn btn-light" onclick="goHome()">
+ <i class="fa-solid fa-arrow-left"></i> Kembali
+</button>
+</div>
+
+<div class="results-layout">
+
+<aside class="filter-card">
+
+<h3>🔎 Filter</h3>
+
+<div class="filter-group">
+<label>Kata Kunci</label>
+<input id="filterKeyword" oninput="applyFilters()" placeholder="Cari...">
+</div>
+
+<div class="filter-group">
+<label>Harga Maksimal</label>
+<input type="number" id="filterPrice" oninput="applyFilters()" placeholder="Contoh 1000000">
+</div>
+
+<div class="filter-group">
+<label>Rating Minimal</label>
+<select id="filterRating" onchange="applyFilters()">
+ <option value="0">Semua</option>
+ <option value="3">3+</option>
+ <option value="4">4+</option>
+ <option value="4.5">4.5+</option>
+</select>
+</div>
+
+<button class="btn btn-light" style="width:100%" onclick="resetFilter()">
+ Reset Filter
+</button>
+
+</aside>
+
+<div>
+
+<div class="results-toolbar">
+
+<span id="resultCount">0 hasil</span>
+
+<select id="sortSelect" onchange="applyFilters()" style="padding:8px;border:1px solid var(--border);border-radius:7px;background:var(--white);color:var(--text)">
+ <option value="default">Urutan Default</option>
+ <option value="cheap">Harga Terendah</option>
+ <option value="expensive">Harga Tertinggi</option>
+ <option value="name">Nama A-Z</option>
+ <option value="rating">Rating Tertinggi</option>
+</select>
+
+</div>
+
+<div class="results-list" id="resultsList"></div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =====================================================
+ ORDERS PAGE
+===================================================== -->
+
+<section class="page" id="ordersPage">
+
+<div class="section-head">
+
+<div>
+ <h2>🧾 Pesanan Saya</h2>
+ <p>Lihat seluruh transaksi perjalananmu</p>
+</div>
+
+<button class="btn btn-light" onclick="goHome()">Beranda</button>
+
+</div>
+
+<div id="ordersContainer"></div>
+
+</section>
+
+<!-- =====================================================
+ WISHLIST PAGE
+===================================================== -->
+
+<section class="page" id="wishlistPage">
+
+<div class="section-head">
+
+<div>
+ <h2>❤️ Wishlist Saya</h2>
+ <p>Tempat favorit yang kamu simpan</p>
+</div>
+
+<button class="btn btn-light" onclick="goHome()">Beranda</button>
+
+</div>
+
+<div class="product-grid" id="wishlistGrid"></div>
+
+</section>
+
+<!-- =====================================================
+ DESTINATION PAGE
+===================================================== -->
+
+<section class="page" id="destinationPage">
+
+<div class="section-head">
+
+<div>
+ <h2>🌏 Semua Destinasi</h2>
+ <p>Jelajahi berbagai destinasi pilihan</p>
+</div>
+
+<button class="btn btn-light" onclick="goHome()">Beranda</button>
+
+</div>
+
+<div class="dest-grid" id="allDestinationGrid"></div>
+
+</section>
+
+<!-- =====================================================
+ PROFILE PAGE
+===================================================== -->
+
+<section class="page" id="profilePage">
+
+<div class="section-head">
+<div>
+ <h2>👤 Profil Saya</h2>
+ <p>Kelola informasi akun</p>
+</div>
+</div>
+
+<div class="profile-grid">
+
+<div class="profile-card">
+
+<div class="profile-big-avatar" id="profileAvatar">U</div>
+
+<h2 id="profileName">Pengguna</h2>
+<p id="profileEmail" style="font-size:12px;color:var(--muted);margin-top:3px"></p>
+
+<div style="margin-top:18px">
+<button class="btn btn-danger" style="width:100%" onclick="logout()">
+ <i class="fa-solid fa-right-from-bracket"></i> Keluar
+</button>
+</div>
+
+</div>
+
+<div class="setting-card">
+
+<h3 style="margin-bottom:10px">Pengaturan Akun</h3>
+
+<div class="setting-row">
+<div>
+<h4>Notifikasi Promo</h4>
+<p>Dapatkan informasi promo terbaru</p>
+</div>
+<input type="checkbox" checked>
+</div>
+
+<div class="setting-row">
+<div>
+<h4>Email Newsletter</h4>
+<p>Informasi perjalanan dan inspirasi</p>
+</div>
+<input type="checkbox" checked>
+</div>
+
+<div class="setting-row">
+<div>
+<h4>Mode Gelap</h4>
+<p>Gunakan tampilan gelap</p>
+</div>
+<button class="btn btn-light" onclick="toggleDark()">Ubah</button>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =====================================================
+ ADMIN
+===================================================== -->
+
+<section class="admin-page" id="adminPage">
+
+<div class="admin-layout">
+
+<aside class="admin-side">
+
+<h3>
+<i class="fa-solid fa-gauge-high"></i>
+ Admin Panel
+</h3>
+
+<button class="admin-menu active" onclick="adminTab('dashboard',this)">
+ <i class="fa-solid fa-chart-line"></i> Dashboard
+</button>
+
+<button class="admin-menu" onclick="adminTab('website',this)">
+ <i class="fa-solid fa-pen"></i> Website
+</button>
+
+<button class="admin-menu" onclick="adminTab('banner',this)">
+ <i class="fa-solid fa-images"></i> Banner
+</button>
+
+<button class="admin-menu" onclick="adminTab('destination',this)">
+ <i class="fa-solid fa-location-dot"></i> Destinasi
+</button>
+
+<button class="admin-menu" onclick="adminTab('hotel',this)">
+ <i class="fa-solid fa-hotel"></i> Hotel
+</button>
+
+<button class="admin-menu" onclick="adminTab('flight',this)">
+ <i class="fa-solid fa-plane"></i> Pesawat
+</button>
+
+<button class="admin-menu" onclick="adminTab('train',this)">
+ <i class="fa-solid fa-train"></i> Kereta
+</button>
+
+<button class="admin-menu" onclick="adminTab('attraction',this)">
+ <i class="fa-solid fa-ticket"></i> Atraksi
+</button>
+
+<button class="admin-menu" onclick="adminTab('voucher',this)">
+ <i class="fa-solid fa-ticket-simple"></i> Voucher
+</button>
+
+<button class="admin-menu" onclick="adminTab('orders',this)">
+ <i class="fa-solid fa-receipt"></i> Transaksi
+</button>
+
+<button class="admin-menu" onclick="adminTab('settings',this)">
+ <i class="fa-solid fa-gear"></i> Pengaturan
+</button>
+
+<button class="admin-menu" onclick="goHome()" style="margin-top:15px;color:var(--primary)">
+ <i class="fa-solid fa-arrow-left"></i> Kembali Website
+</button>
+
+</aside>
+
+<main class="admin-content">
+
+<!-- DASHBOARD -->
+
+<div class="admin-section active" id="admin-dashboard">
+
+<div class="stats">
+
+<div class="stat-card">
+<i class="fa-solid fa-plane"></i>
+<h3 id="statFlight">0</h3>
+<p>Total Pesawat</p>
+</div>
+
+<div class="stat-card">
+<i class="fa-solid fa-hotel"></i>
+<h3 id="statHotel">0</h3>
+<p>Total Hotel</p>
+</div>
+
+<div class="stat-card">
+<i class="fa-solid fa-ticket"></i>
+<h3 id="statAttr">0</h3>
+<p>Total Atraksi</p>
+</div>
+
+<div class="stat-card">
+<i class="fa-solid fa-money-bill"></i>
+<h3 id="statRevenue">Rp0</h3>
+<p>Total Pendapatan</p>
+</div>
+
+</div>
+
+<div class="admin-card">
+
+<h2>📊 Ringkasan Bisnis</h2>
+
+<p class="desc">
+Panel admin untuk mengelola seluruh isi website TravelKu.
+</p>
+
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+
+<div style="background:#eaf6ff;padding:18px;border-radius:10px">
+ <b id="statOrders2">0</b>
+ <small style="display:block;color:var(--muted)">Transaksi</small>
+</div>
+
+<div style="background:#ecfff4;padding:18px;border-radius:10px">
+ <b id="statWishlist">0</b>
+ <small style="display:block;color:var(--muted)">Wishlist</small>
+</div>
+
+<div style="background:#fff4ec;padding:18px;border-radius:10px">
+ <b id="statUsers">0</b>
+ <small style="display:block;color:var(--muted)">Pengguna</small>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- WEBSITE -->
+
+<div class="admin-section" id="admin-website">
+
+<div class="admin-card">
+
+<h2>✏️ Edit Website</h2>
+<p class="desc">Ubah teks utama website.</p>
+
+<form class="admin-form" onsubmit="saveWebsite(event)">
+
+<div class="form-group">
+<label>Nama Website</label>
+<input id="adminLogo" required>
+</div>
+
+<div class="form-group">
+<label>Judul Hero</label>
+<input id="adminHero" required>
+</div>
+
+<div class="form-group full">
+<label>Subtitle</label>
+<textarea id="adminSubtitle" required></textarea>
+</div>
+
+<div class="form-group">
+<label>Judul Promo</label>
+<input id="adminPromoTitle" required>
+</div>
+
+<div class="form-group">
+<label>Kode Promo Utama</label>
+<input id="adminPromoCode" required>
+</div>
+
+<button class="btn btn-primary" type="submit">
+ <i class="fa-solid fa-save"></i> Simpan
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+<!-- BANNER -->
+
+<div class="admin-section" id="admin-banner">
+
+<div class="admin-card">
+
+<h2>🖼️ Tambah Banner</h2>
+
+<form class="admin-form" onsubmit="addBanner(event)">
+
+<div class="form-group">
+<label>Judul</label>
+<input id="bannerName" required>
+</div>
+
+<div class="form-group">
+<label>Deskripsi</label>
+<input id="bannerDesc" required>
+</div>
+
+<div class="form-group full">
+<label>URL Gambar</label>
+<input id="bannerImage" required>
+</div>
+
+<button class="btn btn-primary" type="submit">Tambah Banner</button>
+
+</form>
+
+</div>
+
+<div class="admin-card">
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Gambar</th>
+<th>Judul</th>
+<th>Deskripsi</th>
+<th>Aksi</th>
+</tr>
+</thead>
+<tbody id="bannerTable"></tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+<!-- DESTINATION -->
+
+<div class="admin-section" id="admin-destination">
+
+<div class="admin-card">
+
+<h2>🌏 Tambah Destinasi</h2>
+
+<form class="admin-form" onsubmit="addDestination(event)">
+
+<div class="form-group">
+<label>Nama</label>
+<input id="destName" required>
+</div>
+
+<div class="form-group">
+<label>Lokasi</label>
+<input id="destLocation" required>
+</div>
+
+<div class="form-group">
+<label>Rating</label>
+<input type="number" id="destRating" min="1" max="5" step=".1" value="4.8">
+</div>
+
+<div class="form-group">
+<label>Harga Mulai</label>
+<input type="number" id="destPrice" value="500000">
+</div>
+
+<div class="form-group full">
+<label>Gambar URL</label>
+<input id="destImage" required>
+</div>
+
+<button class="btn btn-primary" type="submit">Tambah Destinasi</button>
+
+</form>
+
+</div>
+
+<div class="admin-card">
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Nama</th>
+<th>Lokasi</th>
+<th>Rating</th>
+<th>Aksi</th>
+</tr>
+</thead>
+<tbody id="destTable"></tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+<!-- HOTEL -->
+
+<div class="admin-section" id="admin-hotel">
+
+<div class="admin-card">
+
+<h2>🏨 Tambah Hotel</h2>
+
+<form class="admin-form" onsubmit="addHotel(event)">
+
+<div class="form-group">
+<label>Nama Hotel</label>
+<input id="newHotelName" required>
+</div>
+
+<div class="form-group">
+<label>Kota</label>
+<input id="newHotelCity" required>
+</div>
+
+<div class="form-group">
+<label>Rating</label>
+<input id="newHotelRating" type="number" min="1" max="5" step=".1" value="4.7">
+</div>
+
+<div class="form-group">
+<label>Harga/Malam</label>
+<input id="newHotelPrice" type="number" required>
+</div>
+
+<div class="form-group full">
+<label>Gambar</label>
+<input id="newHotelImage" required>
+</div>
+
+<button class="btn btn-primary" type="submit">Tambah Hotel</button>
+
+</form>
+
+</div>
+
+<div class="admin-card">
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Hotel</th>
+<th>Kota</th>
+<th>Harga</th>
+<th>Aksi</th>
+</tr>
+</thead>
+<tbody id="hotelTable"></tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+<!-- FLIGHT -->
+
+<div class="admin-section" id="admin-flight">
+
+<div class="admin-card">
+
+<h2>✈️ Tambah Pesawat</h2>
+
+<form class="admin-form" onsubmit="addFlight(event)">
+
+<div class="form-group">
+<label>Maskapai</label>
+<input id="newAirline" required>
+</div>
+
+<div class="form-group">
+<label>Kode</label>
+<input id="newFlightCode" required>
+</div>
+
+<div class="form-group">
+<label>Berangkat</label>
+<input id="newDep" required>
+</div>
+
+<div class="form-group">
+<label>Tiba</label>
+<input id="newArr" required>
+</div>
+
+<div class="form-group">
+<label>Harga</label>
+<input id="newFlightPrice" type="number" required>
+</div>
+
+<button class="btn btn-primary" type="submit">Tambah Pesawat</button>
+
+</form>
+
+</div>
+
+<div class="admin-card">
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Maskapai</th>
+<th>Kode</th>
+<th>Waktu</th>
+<th>Harga</th>
+<th>Aksi</th>
+</tr>
+</thead>
+<tbody id="flightTable"></tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+<!-- TRAIN -->
+
+<div class="admin-section" id="admin-train">
+
+<div class="admin-card">
+
+<h2>🚆 Tambah Kereta</h2>
+
+<form class="admin-form" onsubmit="addTrain(event)">
+
+<div class="form-group">
+<label>Nama Kereta</label>
+<input id="newTrainName" required>
+</div>
+
+<div class="form-group">
+<label>Kelas</label>
+<input id="newTrainClass" required>
+</div>
+
+<div class="form-group">
+<label>Jadwal</label>
+<input id="newTrainTime" required>
+</div>
+
+<div class="form-group">
+<label>Harga</label>
+<input id="newTrainPrice" type="number" required>
+</div>
+
+<button class="btn btn-primary" type="submit">Tambah Kereta</button>
+
+</form>
+
+</div>
+
+<div class="admin-card">
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Kereta</th>
+<th>Kelas</th>
+<th>Waktu</th>
+<th>Harga</th>
+<th>Aksi</th>
+</tr>
+</thead>
+<tbody id="trainTable"></tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+<!-- ATTRACTION -->
+
+<div class="admin-section" id="admin-attraction">
+
+<div class="admin-card">
+
+<h2>🎢 Tambah Atraksi</h2>
+
+<form class="admin-form" onsubmit="addAttraction(event)">
+
+<div class="form-group">
+<label>Nama Atraksi</label>
+<input id="newAttrName" required>
+</div>
+
+<div class="form-group">
+<label>Lokasi</label>
+<input id="newAttrCity" required>
+</div>
+
+<div class="form-group">
+<label>Kategori</label>
+<input id="newAttrCategory" required>
+</div>
+
+<div class="form-group">
+<label>Harga</label>
+<input id="newAttrPrice" type="number" required>
+</div>
+
+<div class="form-group full">
+<label>Gambar</label>
+<input id="newAttrImage" required>
+</div>
+
+<button class="btn btn-primary" type="submit">Tambah Atraksi</button>
+
+</form>
+
+</div>
+
+<div class="admin-card">
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Atraksi</th>
+<th>Lokasi</th>
+<th>Kategori</th>
+<th>Harga</th>
+<th>Aksi</th>
+</tr>
+</thead>
+<tbody id="attrTable"></tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+<!-- VOUCHER -->
+
+<div class="admin-section" id="admin-voucher">
+
+<div class="admin-card">
+
+<h2>🎟️ Kelola Voucher</h2>
+
+<form class="admin-form" onsubmit="addVoucher(event)">
+
+<div class="form-group">
+<label>Kode Voucher</label>
+<input id="voucherCode" required placeholder="HEMAT20">
+</div>
+
+<div class="form-group">
+<label>Diskon (%)</label>
+<input id="voucherDiscount" type="number" min="1" max="100" required>
+</div>
+
+<div class="form-group">
+<label>Minimal Pembelian</label>
+<input id="voucherMin" type="number" value="0">
+</div>
+
+<button class="btn btn-primary" type="submit">Tambah Voucher</button>
+
+</form>
+
+</div>
+
+<div class="admin-card">
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Kode</th>
+<th>Diskon</th>
+<th>Minimal</th>
+<th>Aksi</th>
+</tr>
+</thead>
+<tbody id="voucherTable"></tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+<!-- ORDERS -->
+
+<div class="admin-section" id="admin-orders">
+
+<div class="admin-card">
+
+<h2>🧾 Semua Transaksi</h2>
+
+<div class="table-wrap">
+
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>User</th>
+<th>Item</th>
+<th>Total</th>
+<th>Status</th>
+<th>Aksi</th>
+</tr>
+</thead>
+<tbody id="orderTable"></tbody>
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- SETTINGS -->
+
+<div class="admin-section" id="admin-settings">
+
+<div class="admin-card">
+
+<h2>⚙️ Pengaturan</h2>
+
+<p class="desc">
+Pengaturan tampilan dan data aplikasi.
+</p>
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Warna Utama</label>
+<input type="color" id="primaryColor">
+</div>
+
+<div class="form-group">
+<label>Warna Promo</label>
+<input type="color" id="orangeColor">
+</div>
+
+</div>
+
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+
+<button class="btn btn-primary" onclick="saveColors()">
+ Simpan Warna
+</button>
+
+<button class="btn btn-light" onclick="exportData()">
+ <i class="fa-solid fa-download"></i> Export Data
+</button>
+
+<button class="btn btn-danger" onclick="resetData()">
+ <i class="fa-solid fa-trash"></i> Reset Data
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</main>
+
+</div>
+
+</section>
+
+<!-- =====================================================
+ AUTH MODAL
+===================================================== -->
+
+<div class="modal" id="authModal">
+
+<div class="modal-box">
+
+<div class="modal-head">
+<h3 id="authTitle">Masuk</h3>
+<button class="close" onclick="closeModal('authModal')">&times;</button>
+</div>
+
+<form onsubmit="submitAuth(event)">
+
+<div class="form-group" id="authNameGroup">
+<label>Nama Lengkap</label>
+<input id="authName">
+</div>
+
+<div class="form-group">
+<label>Email</label>
+<input type="email" id="authEmail" required>
+</div>
+
+<div class="form-group">
+<label>Password</label>
+<input type="password" id="authPassword" required>
+</div>
+
+<div style="background:#eaf6ff;padding:12px;border-radius:8px;font-size:11px;margin-bottom:13px">
+ <b>Demo Admin</b><br>
+ Email: admin@travelku.com<br>
+ Password bebas
+</div>
+
+<button class="btn btn-primary" style="width:100%">
+ <i class="fa-solid fa-right-to-bracket"></i>
+ <span id="authButtonText">Masuk</span>
+</button>
+
+<p style="text-align:center;font-size:11px;margin-top:15px;color:var(--muted)">
+ <span id="authSwitchText">Belum punya akun?</span>
+ <a style="color:var(--primary);font-weight:800;cursor:pointer" onclick="switchAuth()">
+ <span id="authSwitchButton">Daftar</span>
+ </a>
+</p>
+
+</form>
+
+</div>
+</div>
+
+<!-- =====================================================
+ CHECKOUT MODAL
+===================================================== -->
+
+<div class="modal" id="checkoutModal">
+
+<div class="modal-box">
+
+<div class="modal-head">
+<h3>🛒 Checkout</h3>
+<button class="close" onclick="closeModal('checkoutModal')">&times;</button>
+</div>
+
+<div class="summary-box" id="checkoutSummary"></div>
+
+<form onsubmit="submitCheckout(event)">
+
+<div class="form-group">
+<label>Nama Pemesan</label>
+<input id="checkoutName" required>
+</div>
+
+<div class="form-group">
+<label>Nomor Telepon</label>
+<input id="checkoutPhone" required placeholder="08xxxxxxxxxx">
+</div>
+
+<div class="form-group">
+<label>Voucher</label>
+<div style="display:flex;gap:7px">
+<input id="checkoutVoucher" placeholder="Contoh: HEMAT20">
+<button type="button" class="btn btn-light" onclick="applyVoucher()">
+ Gunakan
+</button>
+</div>
+<small id="voucherMessage"></small>
+</div>
+
+<div class="form-group">
+<label>Metode Pembayaran</label>
+<select id="payment">
+<option>QRIS</option>
+<option>BCA Virtual Account</option>
+<option>Mandiri Virtual Account</option>
+<option>BRI Virtual Account</option>
+<option>BNI Virtual Account</option>
+<option>Kartu Kredit</option>
+</select>
+</div>
+
+<button class="btn btn-orange" style="width:100%">
+ <i class="fa-solid fa-lock"></i>
+ Bayar & Buat Pesanan
+</button>
+
+</form>
+
+</div>
+</div>
+
+<!-- =====================================================
+ DETAIL MODAL
+===================================================== -->
+
+<div class="modal" id="detailModal">
+
+<div class="modal-box">
+
+<div class="modal-head">
+<h3 id="detailTitle">Detail</h3>
+<button class="close" onclick="closeModal('detailModal')">&times;</button>
+</div>
+
+<div id="detailContent"></div>
+
+</div>
+</div>
+
+<!-- =====================================================
+ INVOICE MODAL
+===================================================== -->
+
+<div class="modal" id="invoiceModal">
+
+<div class="modal-box modal-lg">
+
+<div class="modal-head">
+<h3>Invoice</h3>
+<button class="close" onclick="closeModal('invoiceModal')">&times;</button>
+</div>
+
+<div id="invoiceContent"></div>
+
+<div style="margin-top:15px;display:flex;gap:8px">
+<button class="btn btn-primary" onclick="window.print()">
+ <i class="fa-solid fa-print"></i> Print
+</button>
+<button class="btn btn-light" onclick="closeModal('invoiceModal')">
+ Tutup
+</button>
+</div>
+
+</div>
+</div>
+
+<!-- =====================================================
+ FOOTER
+===================================================== -->
+
+<footer>
+
+<div class="footer-grid">
+
+<div>
+<div class="footer-logo">
+ <i class="fa-solid fa-plane-departure"></i> TravelKu
+</div>
+<p>
+Platform demo pemesanan perjalanan untuk tiket pesawat,
+hotel, kereta api dan atraksi wisata.
+</p>
+</div>
+
+<div>
+<h3>Travel</h3>
+<ul>
+<li>Pesawat</li>
+<li>Hotel</li>
+<li>Kereta</li>
+<li>Atraksi</li>
+</ul>
+</div>
+
+<div>
+<h3>Bantuan</h3>
+<ul>
+<li>Pusat Bantuan</li>
+<li>Syarat & Ketentuan</li>
+<li>Kebijakan Privasi</li>
+<li>Kontak</li>
+</ul>
+</div>
+
+<div>
+<h3>Ikuti Kami</h3>
+<p>
+<i class="fa-brands fa-facebook"></i>
+&nbsp;
+<i class="fa-brands fa-instagram"></i>
+&nbsp;
+<i class="fa-brands fa-tiktok"></i>
+&nbsp;
+<i class="fa-brands fa-youtube"></i>
+</p>
+</div>
+
+</div>
+
+<div class="footer-bottom">
+© 2026 TravelKu. Demo website travel booking.
+</div>
+
+</footer>
+
+<script>
+
+/* =====================================================
+ DATABASE
+===================================================== */
+
+const DEFAULT_DATA={
+
+ settings:{
+  logo:"TravelKu",
+  hero:"Eksplorasi Dunia Tanpa Batas ✈️",
+  subtitle:"Temukan tiket pesawat, hotel, kereta api, dan pengalaman wisata terbaik dengan harga menarik.",
+  promoTitle:"Promo Perjalanan",
+  promoCode:"HEMAT20",
+  primary:"#0194f3",
+  orange:"#ff5e1f"
+ },
+
+ banners:[
+  {
+   id:1,
+   title:"Liburan ke Bali",
+   desc:"Diskon hotel hingga 30%",
+   image:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1000&q=80"
+  },
+  {
+   id:2,
+   title:"Jelajahi Jepang",
+   desc:"Pengalaman liburan tak terlupakan",
+   image:"https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1000&q=80"
+  },
+  {
+   id:3,
+   title:"Staycation Mewah",
+   desc:"Hotel premium dengan harga spesial",
+   image:"https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1000&q=80"
+  }
+ ],
+
+ destinations:[
+  {
+   id:1,
+   name:"Bali",
+   location:"Indonesia",
+   rating:4.9,
+   price:650000,
+   image:"https://images.unsplash.com/photo-1570789210967-2cac24afeb00?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+   id:2,
+   name:"Yogyakarta",
+   location:"Indonesia",
+   rating:4.8,
+   price:350000,
+   image:"https://images.unsplash.com/photo-1584646098378-0874589d76b1?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+   id:3,
+   name:"Bandung",
+   location:"Indonesia",
+   rating:4.7,
+   price:280000,
+   image:"https://images.unsplash.com/photo-1598880940371-c756e015cef1?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+   id:4,
+   name:"Lombok",
+   location:"Indonesia",
+   rating:4.9,
+   price:720000,
+   image:"https://images.unsplash.com/photo-1539367628448-4bc5c9d171c8?auto=format&fit=crop&w=800&q=80"
+  }
+ ],
+
+ hotels:[
+  {
+   id:101,
+   name:"The Apurva Kempinski",
+   city:"Bali",
+   rating:4.9,
+   price:2100000,
+   image:"https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+   id:102,
+   name:"Aston Kuta Hotel",
+   city:"Bali",
+   rating:4.5,
+   price:750000,
+   image:"https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+   id:103,
+   name:"Royal Ambarrukmo",
+   city:"Yogyakarta",
+   rating:4.8,
+   price:980000,
+   image:"https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+   id:104,
+   name:"Padma Hotel Bandung",
+   city:"Bandung",
+   rating:4.8,
+   price:1250000,
+   image:"https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80"
+  }
+ ],
+
+ flights:[
+  {
+   id:201,
+   airline:"Garuda Indonesia",
+   code:"GA-402",
+   dep:"08:00",
+   arr:"10:50",
+   route:"Jakarta → Bali",
+   rating:4.8,
+   price:1450000
+  },
+  {
+   id:202,
+   airline:"AirAsia",
+   code:"QZ-7520",
+   dep:"11:30",
+   arr:"14:15",
+   route:"Jakarta → Bali",
+   rating:4.5,
+   price:890000
+  },
+  {
+   id:203,
+   airline:"Lion Air",
+   code:"JT-032",
+   dep:"16:00",
+   arr:"18:50",
+   route:"Jakarta → Bali",
+   rating:4.2,
+   price:780000
+  }
+ ],
+
+ trains:[
+  {
+   id:301,
+   name:"Argo Wilis",
+   class:"Eksekutif",
+   time:"08:30 - 15:30",
+   route:"Bandung → Surabaya",
+   rating:4.8,
+   price:450000
+  },
+  {
+   id:302,
+   name:"Lodaya",
+   class:"Ekonomi",
+   time:"10:15 - 18:00",
+   route:"Bandung → Yogyakarta",
+   rating:4.6,
+   price:210000
+  },
+  {
+   id:303,
+   name:"Argo Parahyangan",
+   class:"Eksekutif",
+   time:"07:00 - 09:45",
+   route:"Bandung → Jakarta",
+   rating:4.7,
+   price:180000
+  }
+ ],
+
+ attractions:[
+  {
+   id:401,
+   name:"Bali Safari & Marine Park",
+   city:"Gianyar, Bali",
+   category:"Taman Rekreasi",
+   rating:4.8,
+   price:175000,
+   image:"https://images.unsplash.com/photo-1535338454770-8be927b5a00b?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+   id:402,
+   name:"Waterbom Bali",
+   city:"Kuta, Bali",
+   category:"Waterpark",
+   rating:4.9,
+   price:295000,
+   image:"https://images.unsplash.com/photo-1560089000-7433a4ebbd64?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+   id:403,
+   name:"Borobudur Sunrise",
+   city:"Magelang",
+   category:"Wisata Budaya",
+   rating:4.9,
+   price:250000,
+   image:"https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+   id:404,
+   name:"Trans Studio Bandung",
+   city:"Bandung",
+   category:"Theme Park",
+   rating:4.7,
+   price:200000,
+   image:"https://images.unsplash.com/photo-1513883049090-d0b7439799bf?auto=format&fit=crop&w=800&q=80"
+  }
+ ],
+
+ vouchers:[
+  {
+   id:1,
+   code:"HEMAT20",
+   discount:20,
+   min:500000
+  },
+  {
+   id:2,
+   code:"TRAVEL10",
+   discount:10,
+   min:200000
+  },
+  {
+   id:3,
+   code:"WELCOME15",
+   discount:15,
+   min:300000
+  }
+ ],
+
+ wishlist:[],
+ orders:[],
+ users:[]
+
+};
+
+let data;
+
+function loadData(){
+
+ const saved=localStorage.getItem("travelku_database");
+
+ if(saved){
+
+  try{
+   data=JSON.parse(saved);
+  }catch(e){
+   data=JSON.parse(JSON.stringify(DEFAULT_DATA));
+  }
+
+ }else{
+
+  data=JSON.parse(JSON.stringify(DEFAULT_DATA));
+
+ }
+
+}
+
+function saveData(){
+ localStorage.setItem(
+  "travelku_database",
+  JSON.stringify(data)
+ );
+}
+
+let currentUser=
+ JSON.parse(localStorage.getItem("travelku_currentUser")||"null");
+
+let currentSearchType="pesawat";
+let currentResults=[];
+let selectedProduct=null;
+let selectedType="";
+let checkoutDiscount=0;
+
+
+/* =====================================================
+ HELPERS
+===================================================== */
+
+function money(num){
+
+ return new Intl.NumberFormat("id-ID",{
+  style:"currency",
+  currency:"IDR",
+  maximumFractionDigits:0
+ }).format(Number(num)||0);
+
+}
+
+function escapeHTML(value){
+
+ return String(value??"")
+ .replaceAll("&","&amp;")
+ .replaceAll("<","&lt;")
+ .replaceAll(">","&gt;")
+ .replaceAll('"',"&quot;")
+ .replaceAll("'","&#039;");
+
+}
+
+function toast(message,type="success"){
+
+ const box=document.createElement("div");
+
+ box.className="toast-item "+type;
+
+ box.innerHTML=`
+ <i class="fa-solid ${
+  type==="success"?"fa-circle-check":
+  type==="error"?"fa-circle-exclamation":
+  "fa-circle-info"
+ }"></i>
+ ${escapeHTML(message)}
+ `;
+
+ document.getElementById("toast").appendChild(box);
+
+ setTimeout(()=>box.remove(),3000);
+
+}
+
+function closeModal(id){
+ document.getElementById(id).classList.remove("show");
+}
+
+function openModal(id){
+ document.getElementById(id).classList.add("show");
+}
+
+function initials(name){
+
+ return String(name||"U")
+ .split(" ")
+ .map(x=>x[0])
+ .join("")
+ .substring(0,2)
+ .toUpperCase();
+
+}
+
+
+/* =====================================================
+ DATE
+===================================================== */
+
+function setupDates(){
+
+ const d=new Date();
+
+ d.setDate(d.getDate()+1);
+
+ const value=d.toISOString().split("T")[0];
+
+ [
+  "flightDate",
+  "checkin",
+  "checkout",
+  "trainDate",
+  "attrDate"
+ ].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el)el.value=value;
+ });
+
+}
+
+
+/* =====================================================
+ SETTINGS
+===================================================== */
+
+function applySettings(){
+
+ document.documentElement.style.setProperty(
+  "--primary",
+  data.settings.primary
+ );
+
+ document.documentElement.style.setProperty(
+  "--orange",
+  data.settings.orange
+ );
+
+ document.getElementById("logoText").textContent=
+  data.settings.logo;
+
+ document.getElementById("heroTitle").textContent=
+  data.settings.hero;
+
+ document.getElementById("heroSubtitle").textContent=
+  data.settings.subtitle;
+
+ document.getElementById("primaryColor").value=
+  data.settings.primary;
+
+ document.getElementById("orangeColor").value=
+  data.settings.orange;
+
+}
+
+
+/* =====================================================
+ HOME RENDER
+===================================================== */
+
+function renderHome(){
+
+ applySettings();
+
+ renderFlash();
+
+ renderDestinations();
+
+ renderHotels();
+
+ renderPromos();
+
+ renderAttractions();
+
+ renderWishlist();
+
+}
+
+function renderFlash(){
+
+ const grid=document.getElementById("flashGrid");
+
+ grid.innerHTML="";
+
+ const items=[
+  data.hotels[1],
+  data.flights[1],
+  data.attractions[1],
+  data.hotels[2]
+ ];
+
+ items.forEach((item,index)=>{
+
+  if(!item)return;
+
+  const isHotel=item.city!==undefined &&
+                item.image!==undefined &&
+                item.price;
+
+  let image=item.image;
+
+  if(!image){
+
+   image="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80";
+
+  }
+
+  const discount=15+index*5;
+
+  const old=item.price/(1-discount/100);
+
+  const card=document.createElement("div");
+
+  card.className="flash-card";
+
+  card.innerHTML=`
+
+   <span class="discount-badge">-${discount}%</span>
+
+   <div
+   class="flash-img"
+   style="background-image:url('${image}')">
+   </div>
+
+   <div class="flash-body">
+
+    <h3>${escapeHTML(item.name||item.airline||"Promo")}</h3>
+
+    <span class="old-price">${money(old)}</span>
+
+    <div class="flash-price">${money(item.price)}</div>
+
+    <button
+    class="btn btn-orange"
+    style="width:100%;margin-top:8px"
+    onclick='startCheckout(${JSON.stringify(item)},"flash")'>
+    Pesan Sekarang
+    </button>
+
+   </div>
+  `;
+
+  grid.appendChild(card);
+
+ });
+
+}
+
+function renderDestinations(){
+
+ const grid=document.getElementById("destinationGrid");
+
+ grid.innerHTML="";
+
+ data.destinations.slice(0,4).forEach(d=>{
+
+  grid.appendChild(destinationCard(d));
+
+ });
+
+ const all=document.getElementById("allDestinationGrid");
+
+ if(all){
+
+  all.innerHTML="";
+
+  data.destinations.forEach(d=>{
+   all.appendChild(destinationCard(d));
+  });
+
+ }
+
+}
+
+function destinationCard(d){
+
+ const card=document.createElement("div");
+
+ card.className="dest-card";
+
+ const liked=data.wishlist.includes("destination-"+d.id);
+
+ card.innerHTML=`
+
+ <button
+ class="heart ${liked?"active":""}"
+ onclick="event.stopPropagation();toggleWishlist('destination',${d.id})">
+
+ <i class="fa-${liked?"solid":"regular"} fa-heart"></i>
+
+ </button>
+
+ <div
+ class="dest-img"
+ style="background-image:url('${d.image}')">
+ </div>
+
+ <div class="dest-info">
+
+  <h3>${escapeHTML(d.name)}</h3>
+
+  <p>
+  <i class="fa-solid fa-location-dot"></i>
+  ${escapeHTML(d.location)}
+  </p>
+
+  <div class="rating">
+   ★★★★★
+   <span>${d.rating}</span>
+  </div>
+
+  <div style="margin-top:7px;color:var(--orange);font-weight:800;font-size:13px">
+   Mulai ${money(d.price)}
+  </div>
+
+ </div>
+ `;
+
+ card.onclick=()=>{
+  document.getElementById("hotelSearch").value=d.name;
+  switchSearch("hotel");
+  toast("Destinasi "+d.name+" dipilih");
+ };
+
+ return card;
+
+}
+
+function renderHotels(){
+
+ const grid=document.getElementById("hotelGrid");
+
+ grid.innerHTML="";
+
+ data.hotels.forEach(h=>{
+
+  grid.appendChild(
+   productCard(h,"hotel")
+  );
+
+ });
+
+}
+
+function renderAttractions(){
+
+ const grid=document.getElementById("attractionGrid");
+
+ grid.innerHTML="";
+
+ data.attractions.forEach(a=>{
+
+  grid.appendChild(
+   productCard(a,"atraksi")
+  );
+
+ });
+
+}
+
+function productCard(item,type){
+
+ const card=document.createElement("div");
+
+ card.className="product-card";
+
+ const key=type+"-"+item.id;
+
+ const liked=data.wishlist.includes(key);
+
+ const image=item.image||
+ "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80";
+
+ card.innerHTML=`
+
+ <button
+ class="heart ${liked?"active":""}"
+ onclick="event.stopPropagation();toggleWishlist('${type}',${item.id})">
+
+ <i class="fa-${liked?"solid":"regular"} fa-heart"></i>
+
+ </button>
+
+ <div
+ class="product-img"
+ style="background-image:url('${image}')">
+ </div>
+
+ <div class="product-body">
+
+  <h3>${escapeHTML(item.name||item.airline)}</h3>
+
+  <div class="rating">
+   ★★★★★
+   <span>${item.rating||4.5}</span>
+  </div>
+
+  <div class="product-meta">
+   ${escapeHTML(
+    item.city||
+    item.location||
+    item.category||
+    item.route||
+    ""
+   )}
+  </div>
+
+  <div class="product-price">
+   ${money(item.price)}
+  </div>
+
+  <div class="product-actions">
+
+   <button
+   class="btn btn-light"
+   onclick='showDetail(${JSON.stringify(item)},"${type}")'>
+   Detail
+   </button>
+
+   <button
+   class="btn btn-primary"
+   onclick='startCheckout(${JSON.stringify(item)},"${type}")'>
+   Pesan
+   </button>
+
+  </div>
+
+ </div>
+ `;
+
+ return card;
+
+}
+
+function renderPromos(){
+
+ const grid=document.getElementById("promoGrid");
+
+ grid.innerHTML="";
+
+ data.banners.forEach(b=>{
+
+  const div=document.createElement("div");
+
+  div.className="promo-card";
+
+  div.style.backgroundImage=
+   `url('${b.image}')`;
+
+  div.innerHTML=`
+
+   <div class="promo-content">
+
+    <h3>${escapeHTML(b.title)}</h3>
+
+    <p>${escapeHTML(b.desc)}</p>
+
+    <button
+    class="btn btn-orange"
+    style="margin-top:15px"
+    onclick="copyPromo('${data.settings.promoCode}')">
+
+    Gunakan Promo
+
+    </button>
+
+   </div>
+  `;
+
+  grid.appendChild(div);
+
+ });
+
+}
+
+
+/* =====================================================
+ SEARCH
+===================================================== */
+
+function switchSearch(type,button){
+
+ currentSearchType=type;
+
+ document.querySelectorAll(".search-tab")
+ .forEach(x=>x.classList.remove("active"));
+
+ if(button){
+
+  button.classList.add("active");
+
+ }else{
+
+  const index={
+   pesawat:0,
+   hotel:1,
+   kereta:2,
+   atraksi:3
+  }[type];
+
+  document.querySelectorAll(".search-tab")[index]
+   .classList.add("active");
+
+ }
+
+ document.querySelectorAll(".search-form")
+ .forEach(x=>x.classList.add("hidden"));
+
+ document.getElementById(
+  "search"+
+  type.charAt(0).toUpperCase()+
+  type.slice(1)
+ ).classList.remove("hidden");
+
+ document.querySelector(".search-box")
+ .scrollIntoView({
+  behavior:"smooth",
+  block:"center"
+ });
+
+}
+
+function doSearch(e,type){
+
+ e.preventDefault();
+
+ showResults(type);
+
+}
+
+function showResults(type){
+
+ currentSearchType=type;
+
+ let list=[];
+
+ if(type==="hotel")list=data.hotels;
+
+ if(type==="pesawat")list=data.flights;
+
+ if(type==="kereta")list=data.trains;
+
+ if(type==="atraksi")list=data.attractions;
+
+ currentResults=list.map(x=>({...x}));
+
+ document.getElementById("homePage").style.display="none";
+
+ document.querySelectorAll(".page")
+ .forEach(x=>x.classList.remove("active"));
+
+ document.getElementById("resultsPage")
+ .classList.add("active");
+
+ document.getElementById("resultsTitle").textContent=
+  type==="hotel"?"Hotel Pilihan":
+  type==="pesawat"?"Penerbangan":
+  type==="kereta"?"Kereta Api":
+  "Atraksi & Xperience";
+
+ document.getElementById("filterKeyword").value="";
+ document.getElementById("filterPrice").value="";
+ document.getElementById("filterRating").value="0";
+ document.getElementById("sortSelect").value="default";
+
+ applyFilters();
+
+ window.scrollTo({top:0,behavior:"smooth"});
+
+}
+
+function applyFilters(){
+
+ let result=[...currentResults];
+
+ const keyword=
+  document.getElementById("filterKeyword").value
+  .toLowerCase();
+
+ const maxPrice=
+  Number(document.getElementById("filterPrice").value)||Infinity;
+
+ const minRating=
+  Number(document.getElementById("filterRating").value)||0;
+
+ if(keyword){
+
+  result=result.filter(x=>
+   JSON.stringify(x)
+   .toLowerCase()
+   .includes(keyword)
+  );
+
+ }
+
+ result=result.filter(x=>
+  Number(x.price)<=maxPrice &&
+  Number(x.rating||0)>=minRating
+ );
+
+ const sort=
+  document.getElementById("sortSelect").value;
+
+ if(sort==="cheap")
+  result.sort((a,b)=>a.price-b.price);
+
+ if(sort==="expensive")
+  result.sort((a,b)=>b.price-a.price);
+
+ if(sort==="name")
+  result.sort((a,b)=>
+   String(a.name||a.airline)
+   .localeCompare(String(b.name||b.airline))
+  );
+
+ if(sort==="rating")
+  result.sort((a,b)=>
+   Number(b.rating||0)-Number(a.rating||0)
+  );
+
+ renderResultsList(result);
+
+}
+
+function renderResultsList(list){
+
+ const container=document.getElementById("resultsList");
+
+ container.innerHTML="";
+
+ document.getElementById("resultCount").textContent=
+  list.length+" hasil";
+
+ list.forEach(item=>{
+
+  const div=document.createElement("div");
+
+  div.className="result-item";
+
+  const name=
+   item.name||
+   item.airline||
+   "Produk";
+
+  let sub="";
+
+  if(currentSearchType==="hotel")
+   sub=`${item.city} • Rating ${item.rating}`;
+
+  if(currentSearchType==="pesawat")
+   sub=`${item.code} • ${item.route} • ${item.dep} - ${item.arr}`;
+
+  if(currentSearchType==="kereta")
+   sub=`${item.class} • ${item.route} • ${item.time}`;
+
+  if(currentSearchType==="atraksi")
+   sub=`${item.city} • ${item.category}`;
+
+  const icon=
+   currentSearchType==="hotel"?"fa-hotel":
+   currentSearchType==="pesawat"?"fa-plane":
+   currentSearchType==="kereta"?"fa-train":
+   "fa-ticket";
+
+  div.innerHTML=`
+
+   <div class="result-left">
+
+    <div class="result-icon">
+     <i class="fa-solid ${icon}"></i>
+    </div>
+
+    <div class="result-info">
+
+     <h3>${escapeHTML(name)}</h3>
+
+     <p>${escapeHTML(sub)}</p>
+
+     <div class="rating">
+      ★★★★★ <span>${item.rating||4.5}</span>
+     </div>
+
+    </div>
+
+   </div>
+
+   <div class="result-right">
+
+    <strong>${money(item.price)}</strong>
+
+    <button
+    class="btn btn-light"
+    onclick='showDetail(${JSON.stringify(item)},"${currentSearchType}")'>
+    Detail
+    </button>
+
+    <button
+    class="btn btn-primary"
+    onclick='startCheckout(${JSON.stringify(item)},"${currentSearchType}")'>
+    Pesan
+    </button>
+
+   </div>
+
+  `;
+
+  container.appendChild(div);
+
+ });
+
+ if(!list.length){
+
+  container.innerHTML=`
+   <div style="background:var(--white);padding:40px;text-align:center;border-radius:13px">
+    <div style="font-size:45px">🔍</div>
+    <h3>Tidak ada hasil</h3>
+    <p style="font-size:12px;color:var(--muted);margin-top:5px">
+     Coba ubah filter pencarian.
+    </p>
+   </div>
+  `;
+
+ }
+
+}
+
+function resetFilter(){
+
+ document.getElementById("filterKeyword").value="";
+ document.getElementById("filterPrice").value="";
+ document.getElementById("filterRating").value="0";
+ document.getElementById("sortSelect").value="default";
+
+ applyFilters();
+
+}
+
+
+/* =====================================================
+ DETAIL
+===================================================== */
+
+function showDetail(item,type){
+
+ selectedProduct=item;
+ selectedType=type;
+
+ const title=
+  item.name||
+  item.airline||
+  "Detail";
+
+ document.getElementById("detailTitle").textContent=
+  title;
+
+ let image=item.image||
+ "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1000&q=80";
+
+ document.getElementById("detailContent").innerHTML=`
+
+ <img
+ src="${image}"
+ style="width:100%;height:240px;object-fit:cover;border-radius:10px"
+ >
+
+ <div style="padding-top:15px">
+
+  <div class="rating">
+   ★★★★★
+   <span>${item.rating||4.5}</span>
+  </div>
+
+  <p style="font-size:13px;color:var(--muted);margin:10px 0;line-height:1.7">
+
+  ${
+   type==="hotel"
+   ?`${escapeHTML(item.city)} • Hotel nyaman dengan fasilitas lengkap.`
+   :type==="pesawat"
+   ?`${escapeHTML(item.airline)} ${escapeHTML(item.code)} • ${escapeHTML(item.route)}`
+   :type==="kereta"
+   ?`${escapeHTML(item.name)} • ${escapeHTML(item.class)} • ${escapeHTML(item.route)}`
+   :`${escapeHTML(item.city)} • ${escapeHTML(item.category)}`
+  }
+
+  </p>
+
+  <div style="font-size:21px;font-weight:800;color:var(--orange);margin:15px 0">
+   ${money(item.price)}
+  </div>
+
+  <button
+  class="btn btn-primary"
+  style="width:100%"
+  onclick='closeModal("detailModal");startCheckout(${JSON.stringify(item)},"${type}")'>
+   Pesan Sekarang
+  </button>
+
+ </div>
+
+ `;
+
+ openModal("detailModal");
+
+}
+
+
+/* =====================================================
+ WISHLIST
+===================================================== */
+
+function toggleWishlist(type,id){
+
+ const key=type+"-"+id;
+
+ const index=data.wishlist.indexOf(key);
+
+ if(index>=0){
+
+  data.wishlist.splice(index,1);
+
+  toast("Dihapus dari wishlist","info");
+
+ }else{
+
+  data.wishlist.push(key);
+
+  toast("Ditambahkan ke wishlist");
+
+ }
+
+ saveData();
+
+ renderHome();
+
+ updateWishCount();
+
+}
+
+function updateWishCount(){
+
+ document.getElementById("wishCount").textContent=
+  data.wishlist.length;
+
+}
+
+function renderWishlist(){
+
+ const grid=document.getElementById("wishlistGrid");
+
+ if(!grid)return;
+
+ grid.innerHTML="";
+
+ data.wishlist.forEach(key=>{
+
+  const parts=key.split("-");
+
+  const type=parts[0];
+
+  const id=Number(parts[1]);
+
+  let item=null;
+
+  if(type==="hotel")
+   item=data.hotels.find(x=>x.id===id);
+
+  if(type==="atraksi")
+   item=data.attractions.find(x=>x.id===id);
+
+  if(type==="destination")
+   item=data.destinations.find(x=>x.id===id);
+
+  if(!item)return;
+
+  grid.appendChild(
+   productCard(item,type)
+  );
+
+ });
+
+ if(!data.wishlist.length){
+
+  grid.innerHTML=`
+   <div style="grid-column:1/-1;background:var(--white);padding:50px;text-align:center;border-radius:14px">
+    <div style="font-size:50px">💔</div>
+    <h3>Wishlist masih kosong</h3>
+    <p style="font-size:12px;color:var(--muted);margin:5px 0 15px">
+     Simpan hotel, atraksi, atau destinasi favoritmu.
+    </p>
+    <button class="btn btn-primary" onclick="goHome()">Jelajahi Sekarang</button>
+   </div>
+  `;
+
+ }
+
+}
+
+
+/* =====================================================
+ CHECKOUT
+===================================================== */
+
+function startCheckout(item,type){
+
+ if(!currentUser){
+
+  toast("Silakan login terlebih dahulu","error");
+
+  openAuth("login");
+
+  return;
+
+ }
+
+ selectedProduct=item;
+ selectedType=type;
+ checkoutDiscount=0;
+
+ document.getElementById("checkoutName").value=
+  currentUser.name||"";
+
+ document.getElementById("checkoutPhone").value="";
+
+ document.getElementById("checkoutVoucher").value="";
+
+ document.getElementById("voucherMessage").textContent="";
+
+ updateCheckoutSummary();
+
+ openModal("checkoutModal");
+
+}
+
+function updateCheckoutSummary(){
+
+ if(!selectedProduct)return;
+
+ const name=
+  selectedProduct.name||
+  selectedProduct.airline||
+  "Produk";
+
+ const price=
+  Number(selectedProduct.price)||0;
+
+ const total=
+  Math.max(0,price-checkoutDiscount);
+
+ document.getElementById("checkoutSummary").innerHTML=`
+
+ <b>${escapeHTML(name)}</b>
+
+ <div class="summary-row">
+  <span>Harga</span>
+  <span>${money(price)}</span>
+ </div>
+
+ ${
+  checkoutDiscount>0
+  ?`
+  <div class="summary-row" style="color:var(--green)">
+   <span>Diskon</span>
+   <span>-${money(checkoutDiscount)}</span>
+  </div>
+  `
+  :""
+ }
+
+ <div class="summary-row summary-total">
+  <span>Total</span>
+  <span>${money(total)}</span>
+ </div>
+
+ `;
+
+}
+
+function applyVoucher(){
+
+ const code=
+  document.getElementById("checkoutVoucher")
+  .value
+  .trim()
+  .toUpperCase();
+
+ const voucher=
+  data.vouchers.find(v=>
+   v.code.toUpperCase()===code
+  );
+
+ const price=Number(selectedProduct.price)||0;
+
+ if(!voucher){
+
+  checkoutDiscount=0;
+
+  document.getElementById("voucherMessage").textContent=
+   "Voucher tidak ditemukan.";
+
+  document.getElementById("voucherMessage").style.color=
+   "var(--red)";
+
+  updateCheckoutSummary();
+
+  return;
+
+ }
+
+ if(price<voucher.min){
+
+  checkoutDiscount=0;
+
+  document.getElementById("voucherMessage").textContent=
+   "Minimal transaksi "+money(voucher.min);
+
+  document.getElementById("voucherMessage").style.color=
+   "var(--red)";
+
+  updateCheckoutSummary();
+
+  return;
+
+ }
+
+ checkoutDiscount=
+  Math.round(price*voucher.discount/100);
+
+ document.getElementById("voucherMessage").textContent=
+  `Voucher berhasil! Diskon ${voucher.discount}%`;
+
+ document.getElementById("voucherMessage").style.color=
+  "var(--green)";
+
+ updateCheckoutSummary();
+
+}
+
+function submitCheckout(e){
+
+ e.preventDefault();
+
+ const price=
+  Number(selectedProduct.price)||0;
+
+ const total=
+  Math.max(0,price-checkoutDiscount);
+
+ const order={
+
+  id:"TK-"+Date.now().toString().slice(-8),
+
+  userEmail:currentUser.email,
+
+  userName:
+   document.getElementById("checkoutName").value,
+
+  phone:
+   document.getElementById("checkoutPhone").value,
+
+  item:
+   selectedProduct.name||
+   selectedProduct.airline,
+
+  type:selectedType,
+
+  price,
+
+  discount:checkoutDiscount,
+
+  total,
+
+  payment:
+   document.getElementById("payment").value,
+
+  status:"LUNAS",
+
+  date:new Date().toLocaleString("id-ID")
+
+ };
+
+ data.orders.unshift(order);
+
+ saveData();
+
+ closeModal("checkoutModal");
+
+ toast("Pesanan berhasil dibuat 🎉");
+
+ showPage("ordersPage");
+
+ renderOrders();
+
+ renderAdmin();
+
+}
+
+
+/* =====================================================
+ ORDERS
+===================================================== */
+
+function renderOrders(){
+
+ const container=document.getElementById("ordersContainer");
+
+ if(!container)return;
+
+ container.innerHTML="";
+
+ if(!currentUser){
+
+  container.innerHTML=`
+   <div style="background:var(--white);padding:45px;text-align:center;border-radius:14px">
+    <h3>Silakan masuk terlebih dahulu</h3>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="openAuth('login')">
+     Masuk
+    </button>
+   </div>
+  `;
+
+  return;
+
+ }
+
+ const orders=data.orders.filter(o=>
+  o.userEmail===currentUser.email
+ );
+
+ if(!orders.length){
+
+  container.innerHTML=`
+   <div style="background:var(--white);padding:50px;text-align:center;border-radius:14px">
+    <div style="font-size:50px">🧳</div>
+    <h3>Belum ada pesanan</h3>
+    <p style="font-size:12px;color:var(--muted);margin-top:5px">
+     Pesanan perjalananmu akan muncul di sini.
+    </p>
+    <button class="btn btn-primary" style="margin-top:15px" onclick="goHome()">
+     Cari Perjalanan
+    </button>
+   </div>
+  `;
+
+  return;
+
+ }
+
+ orders.forEach(order=>{
+
+  const div=document.createElement("div");
+
+  div.className="order-card";
+
+  div.innerHTML=`
+
+  <div class="order-top">
+
+   <div>
+    <span class="order-id">${escapeHTML(order.id)}</span>
+    <small style="color:var(--muted);margin-left:8px">
+     ${escapeHTML(order.date)}
+    </small>
+   </div>
+
+   <span class="status success">
+    ${escapeHTML(order.status)}
+   </span>
+
+  </div>
+
+  <div class="order-body">
+
+   <div>
+
+    <h3>${escapeHTML(order.item)}</h3>
+
+    <p>
+     Pembayaran: ${escapeHTML(order.payment)}
+    </p>
+
+    <p>
+     Pemesan: ${escapeHTML(order.userName)}
+    </p>
+
+   </div>
+
+   <div style="text-align:right">
+
+    <strong style="color:var(--orange);font-size:17px">
+     ${money(order.total)}
+    </strong>
+
+    <br>
+
+    <button
+    class="btn btn-light"
+    style="margin-top:8px"
+    onclick='showInvoice(${JSON.stringify(order)})'>
+     <i class="fa-solid fa-file-invoice"></i>
+     Invoice
+    </button>
+
+   </div>
+
+  </div>
+
+  `;
+
+  container.appendChild(div);
+
+ });
+
+}
+
+
+/* =====================================================
+ INVOICE
+===================================================== */
+
+function showInvoice(order){
+
+ document.getElementById("invoiceContent").innerHTML=`
+
+ <div class="invoice">
+
+  <div class="invoice-head">
+
+   <div class="invoice-logo">
+    <i class="fa-solid fa-plane-departure"></i>
+    TravelKu
+   </div>
+
+   <div style="text-align:right;font-size:11px">
+    <b>INVOICE</b><br>
+    ${escapeHTML(order.id)}
+   </div>
+
+  </div>
+
+  <p style="font-size:12px">
+   <b>Nama:</b> ${escapeHTML(order.userName)}<br>
+   <b>Telepon:</b> ${escapeHTML(order.phone)}<br>
+   <b>Tanggal:</b> ${escapeHTML(order.date)}
+  </p>
+
+  <table class="invoice-table">
+
+   <tr>
+    <td>Produk</td>
+    <td style="text-align:right">
+     ${escapeHTML(order.item)}
+    </td>
+   </tr>
+
+   <tr>
+    <td>Harga</td>
+    <td style="text-align:right">
+     ${money(order.price)}
+    </td>
+   </tr>
+
+   <tr>
+    <td>Diskon</td>
+    <td style="text-align:right;color:#20b26b">
+     -${money(order.discount)}
+    </td>
+   </tr>
+
+   <tr>
+    <td>Pembayaran</td>
+    <td style="text-align:right">
+     ${escapeHTML(order.payment)}
+    </td>
+   </tr>
+
+  </table>
+
+  <div class="invoice-total">
+   Total ${money(order.total)}
+  </div>
+
+  <div style="margin-top:25px;text-align:center;font-size:10px;color:#888">
+   Terima kasih telah menggunakan TravelKu.
+  </div>
+
+ </div>
+
+ `;
+
+ openModal("invoiceModal");
+
+}
+
+
+/* =====================================================
+ AUTH
+===================================================== */
+
+let authMode="login";
+
+function openAuth(mode){
+
+ authMode=mode;
+
+ document.getElementById("authTitle").textContent=
+  mode==="login"?"Masuk ke TravelKu":"Daftar Akun";
+
+ document.getElementById("authNameGroup").style.display=
+  mode==="register"?"block":"none";
+
+ document.getElementById("authButtonText").textContent=
+  mode==="login"?"Masuk":"Daftar";
+
+ document.getElementById("authSwitchText").textContent=
+  mode==="login"
+  ?"Belum punya akun?"
+  :"Sudah punya akun?";
+
+ document.getElementById("authSwitchButton").textContent=
+  mode==="login"?"Daftar":"Masuk";
+
+ openModal("authModal");
+
+}
+
+function switchAuth(){
+
+ openAuth(
+  authMode==="login"
+  ?"register"
+  :"login"
+ );
+
+}
+
+function submitAuth(e){
+
+ e.preventDefault();
+
+ const email=
+  document.getElementById("authEmail")
+  .value.trim()
+  .toLowerCase();
+
+ const password=
+  document.getElementById("authPassword")
+  .value;
+
+ const name=
+  document.getElementById("authName")
+  .value.trim();
+
+ if(email==="admin@travelku.com"){
+
+  currentUser={
+   name:"Super Admin",
+   email,
+   role:"admin"
+  };
+
+ }else{
+
+  currentUser={
+   name:name||email.split("@")[0],
+   email,
+   role:"customer"
+  };
+
+  if(!data.users.includes(email)){
+   data.users.push(email);
+  }
+
+  saveData();
+
+ }
+
+ localStorage.setItem(
+  "travelku_currentUser",
+  JSON.stringify(currentUser)
+ );
+
+ closeModal("authModal");
+
+ updateAuthUI();
+
+ if(currentUser.role==="admin"){
+
+  toast("Login admin berhasil");
+
+  showPage("adminPage");
+
+  renderAdmin();
+
+ }else{
+
+  toast("Selamat datang "+currentUser.name);
+
+  showPage("homePage");
+
+ }
+
+}
+
+function logout(){
+
+ currentUser=null;
+
+ localStorage.removeItem("travelku_currentUser");
+
+ updateAuthUI();
+
+ goHome();
+
+ toast("Berhasil keluar","info");
+
+}
+
+function updateAuthUI(){
+
+ const area=document.getElementById("authArea");
+
+ if(currentUser){
+
+  area.innerHTML=`
+
+   <div
+   class="avatar"
+   onclick="${
+    currentUser.role==="admin"
+    ?"showPage('adminPage')"
+    :"showPage('profilePage')"
+   }"
+   title="${escapeHTML(currentUser.name)}">
+
+   ${initials(currentUser.name)}
+
+   </div>
+
+  `;
+
+  if(document.getElementById("profileName")){
+
+   document.getElementById("profileName").textContent=
+    currentUser.name;
+
+   document.getElementById("profileEmail").textContent=
+    currentUser.email;
+
+   document.getElementById("profileAvatar").textContent=
+    initials(currentUser.name);
+
+  }
+
+ }else{
+
+  area.innerHTML=`
+   <button class="btn btn-light" onclick="openAuth('login')">
+    Masuk
+   </button>
+  `;
+
+ }
+
+}
+
+
+/* =====================================================
+ PAGES
+===================================================== */
+
+function hideAllPages(){
+
+ document.getElementById("homePage").style.display="none";
+
+ document.querySelectorAll(".page")
+ .forEach(x=>x.classList.remove("active"));
+
+ document.getElementById("adminPage")
+ .classList.remove("active");
+
+}
+
+function showPage(id){
+
+ hideAllPages();
+
+ const el=document.getElementById(id);
+
+ if(!el)return;
+
+ if(id==="homePage"){
+
+  el.style.display="block";
+
+ }else{
+
+  el.classList.add("active");
+
+ }
+
+ if(id==="ordersPage")
+  renderOrders();
+
+ if(id==="wishlistPage")
+  renderWishlist();
+
+ if(id==="destinationPage")
+  renderDestinations();
+
+ if(id==="profilePage")
+  updateAuthUI();
+
+ if(id==="adminPage"){
+
+  if(!currentUser||currentUser.role!=="admin"){
+
+   toast("Halaman admin hanya untuk admin","error");
+
+   openAuth("login");
+
+   return;
+
+  }
+
+  document.getElementById("adminPage")
+   .classList.add("active");
+
+  renderAdmin();
+
+ }
+
+ window.scrollTo({top:0,behavior:"smooth"});
+
+}
+
+function goHome(){
+
+ showPage("homePage");
+
+}
+
+
+/* =====================================================
+ DARK MODE
+===================================================== */
+
+function toggleDark(){
+
+ document.body.classList.toggle("dark");
+
+ const dark=
+  document.body.classList.contains("dark");
+
+ localStorage.setItem(
+  "travelku_dark",
+  dark?"1":"0"
+ );
+
+ document.getElementById("darkIcon").className=
+  dark
+  ?"fa-solid fa-sun"
+  :"fa-solid fa-moon";
+
+}
+
+function loadDark(){
+
+ const dark=
+  localStorage.getItem("travelku_dark")==="1";
+
+ if(dark){
+
+  document.body.classList.add("dark");
+
+  document.getElementById("darkIcon").className=
+   "fa-solid fa-sun";
+
+ }
+
+}
+
+
+/* =====================================================
+ PROMO
+===================================================== */
+
+function copyPromo(code){
+
+ navigator.clipboard?.writeText(code);
+
+ toast("Kode promo "+code+" berhasil disalin");
+
+}
+
+function subscribe(e){
+
+ e.preventDefault();
+
+ toast("Berhasil berlangganan promo 🎉");
+
+ e.target.reset();
+
+}
+
+
+/* =====================================================
+ COUNTDOWN
+===================================================== */
+
+let saleEnd=
+ Date.now()+
+ 1000*60*60*8+
+ 1000*60*37+
+ 1000*42;
+
+function countdown(){
+
+ let diff=Math.max(
+  0,
+  saleEnd-Date.now()
+ );
+
+ if(diff<=0){
+
+  saleEnd=
+   Date.now()+1000*60*60*8;
+
+  diff=saleEnd-Date.now();
+
+ }
+
+ const totalSec=
+  Math.floor(diff/1000);
+
+ const h=
+  Math.floor(totalSec/3600);
+
+ const m=
+  Math.floor((totalSec%3600)/60);
+
+ const s=
+  totalSec%60;
+
+ document.getElementById("cdHour").textContent=
+  String(h).padStart(2,"0");
+
+ document.getElementById("cdMin").textContent=
+  String(m).padStart(2,"0");
+
+ document.getElementById("cdSec").textContent=
+  String(s).padStart(2,"0");
+
+}
+
+
+/* =====================================================
+ ADMIN
+===================================================== */
+
+function adminTab(tab,button){
+
+ document.querySelectorAll(".admin-section")
+ .forEach(x=>x.classList.remove("active"));
+
+ document.querySelectorAll(".admin-menu")
+ .forEach(x=>x.classList.remove("active"));
+
+ const section=
+  document.getElementById("admin-"+tab);
+
+ if(section)
+  section.classList.add("active");
+
+ if(button)
+  button.classList.add("active");
+
+ if(tab==="website")
+  loadWebsiteAdmin();
+
+ renderAdmin();
+
+}
+
+function renderAdmin(){
+
+ document.getElementById("statFlight").textContent=
+  data.flights.length;
+
+ document.getElementById("statHotel").textContent=
+  data.hotels.length;
+
+ document.getElementById("statAttr").textContent=
+  data.attractions.length;
+
+ const revenue=
+  data.orders.reduce(
+   (sum,o)=>sum+Number(o.total||0),0
+  );
+
+ document.getElementById("statRevenue").textContent=
+  money(revenue);
+
+ document.getElementById("statOrders2").textContent=
+  data.orders.length;
+
+ document.getElementById("statWishlist").textContent=
+  data.wishlist.length;
+
+ document.getElementById("statUsers").textContent=
+  data.users.length;
+
+ renderBannerTable();
+ renderDestinationTable();
+ renderHotelTable();
+ renderFlightTable();
+ renderTrainTable();
+ renderAttractionTable();
+ renderVoucherTable();
+ renderOrderTable();
+
+}
+
+
+/* =====================================================
+ ADMIN WEBSITE
+===================================================== */
+
+function loadWebsiteAdmin(){
+
+ document.getElementById("adminLogo").value=
+  data.settings.logo;
+
+ document.getElementById("adminHero").value=
+  data.settings.hero;
+
+ document.getElementById("adminSubtitle").value=
+  data.settings.subtitle;
+
+ document.getElementById("adminPromoTitle").value=
+  data.settings.promoTitle;
+
+ document.getElementById("adminPromoCode").value=
+  data.settings.promoCode;
+
+}
+
+function saveWebsite(e){
+
+ e.preventDefault();
+
+ data.settings.logo=
+  document.getElementById("adminLogo").value;
+
+ data.settings.hero=
+  document.getElementById("adminHero").value;
+
+ data.settings.subtitle=
+  document.getElementById("adminSubtitle").value;
+
+ data.settings.promoTitle=
+  document.getElementById("adminPromoTitle").value;
+
+ data.settings.promoCode=
+  document.getElementById("adminPromoCode").value
+  .toUpperCase();
+
+ saveData();
+
+ renderHome();
+
+ toast("Website berhasil diperbarui");
+
+}
+
+
+/* =====================================================
+ ADMIN BANNER
+===================================================== */
+
+function addBanner(e){
+
+ e.preventDefault();
+
+ data.banners.push({
+
+  id:Date.now(),
+
+  title:
+   document.getElementById("bannerName").value,
+
+  desc:
+   document.getElementById("bannerDesc").value,
+
+  image:
+   document.getElementById("bannerImage").value
+
+ });
+
+ saveData();
+
+ e.target.reset();
+
+ renderAdmin();
+ renderHome();
+
+ toast("Banner ditambahkan");
+
+}
+
+function renderBannerTable(){
+
+ const table=document.getElementById("bannerTable");
+
+ if(!table)return;
+
+ table.innerHTML="";
+
+ data.banners.forEach((b,i)=>{
+
+  table.innerHTML+=`
+
+  <tr>
+
+   <td>
+    <img class="admin-img" src="${escapeHTML(b.image)}">
+   </td>
+
+   <td>${escapeHTML(b.title)}</td>
+
+   <td>${escapeHTML(b.desc)}</td>
+
+   <td>
+    <button class="btn btn-danger" onclick="deleteBanner(${i})">
+     Hapus
+    </button>
+   </td>
+
+  </tr>
+
+  `;
+
+ });
+
+}
+
+function deleteBanner(i){
+
+ if(!confirm("Hapus banner?"))return;
+
+ data.banners.splice(i,1);
+
+ saveData();
+
+ renderAdmin();
+ renderHome();
+
+}
+
+
+/* =====================================================
+ ADMIN DESTINATION
+===================================================== */
+
+function addDestination(e){
+
+ e.preventDefault();
+
+ data.destinations.push({
+
+  id:Date.now(),
+
+  name:
+   document.getElementById("destName").value,
+
+  location:
+   document.getElementById("destLocation").value,
+
+  rating:
+   Number(document.getElementById("destRating").value),
+
+  price:
+   Number(document.getElementById("destPrice").value),
+
+  image:
+   document.getElementById("destImage").value
+
+ });
+
+ saveData();
+
+ e.target.reset();
+
+ renderAdmin();
+ renderHome();
+
+ toast("Destinasi ditambahkan");
+
+}
+
+function renderDestinationTable(){
+
+ const table=document.getElementById("destTable");
+
+ if(!table)return;
+
+ table.innerHTML="";
+
+ data.destinations.forEach((d,i)=>{
+
+  table.innerHTML+=`
+
+  <tr>
+
+   <td>${escapeHTML(d.name)}</td>
+
+   <td>${escapeHTML(d.location)}</td>
+
+   <td>⭐ ${d.rating}</td>
+
+   <td>
+
+    <button class="btn btn-danger" onclick="deleteDestination(${i})">
+     Hapus
+    </button>
+
+   </td>
+
+  </tr>
+
+  `;
+
+ });
+
+}
+
+function deleteDestination(i){
+
+ if(!confirm("Hapus destinasi?"))return;
+
+ data.destinations.splice(i,1);
+
+ saveData();
+
+ renderAdmin();
+ renderHome();
+
+}
+
+
+/* =====================================================
+ ADMIN HOTEL
+===================================================== */
+
+function addHotel(e){
+
+ e.preventDefault();
+
+ data.hotels.push({
+
+  id:Date.now(),
+
+  name:
+   document.getElementById("newHotelName").value,
+
+  city:
+   document.getElementById("newHotelCity").value,
+
+  rating:
+   Number(document.getElementById("newHotelRating").value),
+
+  price:
+   Number(document.getElementById("newHotelPrice").value),
+
+  image:
+   document.getElementById("newHotelImage").value
+
+ });
+
+ saveData();
+
+ e.target.reset();
+
+ renderAdmin();
+ renderHome();
+
+ toast("Hotel ditambahkan");
+
+}
+
+function renderHotelTable(){
+
+ const table=document.getElementById("hotelTable");
+
+ if(!table)return;
+
+ table.innerHTML="";
+
+ data.hotels.forEach((h,i)=>{
+
+  table.innerHTML+=`
+
+  <tr>
+
+   <td>${escapeHTML(h.name)}</td>
+
+   <td>${escapeHTML(h.city)}</td>
+
+   <td>${money(h.price)}</td>
+
+   <td>
+    <button class="btn btn-danger" onclick="deleteHotel(${i})">
+     Hapus
+    </button>
+   </td>
+
+  </tr>
+
+  `;
+
+ });
+
+}
+
+function deleteHotel(i){
+
+ if(!confirm("Hapus hotel?"))return;
+
+ data.hotels.splice(i,1);
+
+ saveData();
+
+ renderAdmin();
+ renderHome();
+
+}
+
+
+/* =====================================================
+ ADMIN FLIGHT
+===================================================== */
+
+function addFlight(e){
+
+ e.preventDefault();
+
+ data.flights.push({
+
+  id:Date.now(),
+
+  airline:
+   document.getElementById("newAirline").value,
+
+  code:
+   document.getElementById("newFlightCode").value,
+
+  dep:
+   document.getElementById("newDep").value,
+
+  arr:
+   document.getElementById("newArr").value,
+
+  route:"Jakarta → Bali",
+
+  rating:4.5,
+
+  price:
+   Number(document.getElementById("newFlightPrice").value)
+
+ });
+
+ saveData();
+
+ e.target.reset();
+
+ renderAdmin();
+
+ toast("Pesawat ditambahkan");
+
+}
+
+function renderFlightTable(){
+
+ const table=document.getElementById("flightTable");
+
+ if(!table)return;
+
+ table.innerHTML="";
+
+ data.flights.forEach((f,i)=>{
+
+  table.innerHTML+=`
+
+  <tr>
+
+   <td>${escapeHTML(f.airline)}</td>
+
+   <td>${escapeHTML(f.code)}</td>
+
+   <td>${escapeHTML(f.dep)} - ${escapeHTML(f.arr)}</td>
+
+   <td>${money(f.price)}</td>
+
+   <td>
+    <button class="btn btn-danger" onclick="deleteFlight(${i})">
+     Hapus
+    </button>
+   </td>
+
+  </tr>
+
+  `;
+
+ });
+
+}
+
+function deleteFlight(i){
+
+ if(!confirm("Hapus pesawat?"))return;
+
+ data.flights.splice(i,1);
+
+ saveData();
+
+ renderAdmin();
+
+}
+
+
+/* =====================================================
+ ADMIN TRAIN
+===================================================== */
+
+function addTrain(e){
+
+ e.preventDefault();
+
+ data.trains.push({
+
+  id:Date.now(),
+
+  name:
+   document.getElementById("newTrainName").value,
+
+  class:
+   document.getElementById("newTrainClass").value,
+
+  time:
+   document.getElementById("newTrainTime").value,
+
+  route:"Jakarta → Bandung",
+
+  rating:4.5,
+
+  price:
+   Number(document.getElementById("newTrainPrice").value)
+
+ });
+
+ saveData();
+
+ e.target.reset();
+
+ renderAdmin();
+
+ toast("Kereta ditambahkan");
+
+}
+
+function renderTrainTable(){
+
+ const table=document.getElementById("trainTable");
+
+ if(!table)return;
+
+ table.innerHTML="";
+
+ data.trains.forEach((t,i)=>{
+
+  table.innerHTML+=`
+
+  <tr>
+
+   <td>${escapeHTML(t.name)}</td>
+
+   <td>${escapeHTML(t.class)}</td>
+
+   <td>${escapeHTML(t.time)}</td>
+
+   <td>${money(t.price)}</td>
+
+   <td>
+    <button class="btn btn-danger" onclick="deleteTrain(${i})">
+     Hapus
+    </button>
+   </td>
+
+  </tr>
+
+  `;
+
+ });
+
+}
+
+function deleteTrain(i){
+
+ if(!confirm("Hapus kereta?"))return;
+
+ data.trains.splice(i,1);
+
+ saveData();
+
+ renderAdmin();
+
+}
+
+
+/* =====================================================
+ ADMIN ATTRACTION
+===================================================== */
+
+function addAttraction(e){
+
+ e.preventDefault();
+
+ data.attractions.push({
+
+  id:Date.now(),
+
+  name:
+   document.getElementById("newAttrName").value,
+
+  city:
+   document.getElementById("newAttrCity").value,
+
+  category:
+   document.getElementById("newAttrCategory").value,
+
+  rating:4.6,
+
+  price:
+   Number(document.getElementById("newAttrPrice").value),
+
+  image:
+   document.getElementById("newAttrImage").value
+
+ });
+
+ saveData();
+
+ e.target.reset();
+
+ renderAdmin();
+ renderHome();
+
+ toast("Atraksi ditambahkan");
+
+}
+
+function renderAttractionTable(){
+
+ const table=document.getElementById("attrTable");
+
+ if(!table)return;
+
+ table.innerHTML="";
+
+ data.attractions.forEach((a,i)=>{
+
+  table.innerHTML+=`
+
+  <tr>
+
+   <td>${escapeHTML(a.name)}</td>
+
+   <td>${escapeHTML(a.city)}</td>
+
+   <td>${escapeHTML(a.category)}</td>
+
+   <td>${money(a.price)}</td>
+
+   <td>
+    <button class="btn btn-danger" onclick="deleteAttraction(${i})">
+     Hapus
+    </button>
+   </td>
+
+  </tr>
+
+  `;
+
+ });
+
+}
+
+function deleteAttraction(i){
+
+ if(!confirm("Hapus atraksi?"))return;
+
+ data.attractions.splice(i,1);
+
+ saveData();
+
+ renderAdmin();
+ renderHome();
+
+}
+
+
+/* =====================================================
+ ADMIN VOUCHER
+===================================================== */
+
+function addVoucher(e){
+
+ e.preventDefault();
+
+ const code=
+  document.getElementById("voucherCode")
+  .value
+  .trim()
+  .toUpperCase();
+
+ data.vouchers.push({
+
+  id:Date.now(),
+
+  code,
+
+  discount:
+   Number(document.getElementById("voucherDiscount").value),
+
+  min:
+   Number(document.getElementById("voucherMin").value)||0
+
+ });
+
+ saveData();
+
+ e.target.reset();
+
+ renderAdmin();
+
+ toast("Voucher ditambahkan");
+
+}
+
+function renderVoucherTable(){
+
+ const table=document.getElementById("voucherTable");
+
+ if(!table)return;
+
+ table.innerHTML="";
+
+ data.vouchers.forEach((v,i)=>{
+
+  table.innerHTML+=`
+
+  <tr>
+
+   <td><b>${escapeHTML(v.code)}</b></td>
+
+   <td>${v.discount}%</td>
+
+   <td>${money(v.min)}</td>
+
+   <td>
+    <button class="btn btn-danger" onclick="deleteVoucher(${i})">
+     Hapus
+    </button>
+   </td>
+
+  </tr>
+
+  `;
+
+ });
+
+}
+
+function deleteVoucher(i){
+
+ if(!confirm("Hapus voucher?"))return;
+
+ data.vouchers.splice(i,1);
+
+ saveData();
+
+ renderAdmin();
+
+}
+
+
+/* =====================================================
+ ADMIN ORDERS
+===================================================== */
+
+function renderOrderTable(){
+
+ const table=document.getElementById("orderTable");
+
+ if(!table)return;
+
+ table.innerHTML="";
+
+ data.orders.forEach((o,i)=>{
+
+  table.innerHTML+=`
+
+  <tr>
+
+   <td>${escapeHTML(o.id)}</td>
+
+   <td>${escapeHTML(o.userName)}</td>
+
+   <td>${escapeHTML(o.item)}</td>
+
+   <td>${money(o.total)}</td>
+
+   <td>
+    <span class="status success">
+     ${escapeHTML(o.status)}
+    </span>
+   </td>
+
+   <td>
+
+    <button
+    class="btn btn-light"
+    onclick='showInvoice(${JSON.stringify(o)})'>
+     Invoice
+    </button>
+
+    <button
+    class="btn btn-danger"
+    onclick="deleteOrder(${i})">
+     Hapus
+    </button>
+
+   </td>
+
+  </tr>
+
+  `;
+
+ });
+
+}
+
+function deleteOrder(i){
+
+ if(!confirm("Hapus transaksi?"))return;
+
+ data.orders.splice(i,1);
+
+ saveData();
+
+ renderAdmin();
+
+}
+
+
+/* =====================================================
+ COLORS
+===================================================== */
+
+function saveColors(){
+
+ data.settings.primary=
+  document.getElementById("primaryColor").value;
+
+ data.settings.orange=
+  document.getElementById("orangeColor").value;
+
+ saveData();
+
+ applySettings();
+
+ toast("Warna website diperbarui");
+
+}
+
+
+/* =====================================================
+ EXPORT
+===================================================== */
+
+function exportData(){
+
+ const json=
+  JSON.stringify(data,null,2);
+
+ const blob=
+  new Blob([json],{
+   type:"application/json"
+  });
+
+ const url=
+  URL.createObjectURL(blob);
+
+ const a=document.createElement("a");
+
+ a.href=url;
+
+ a.download="travelku-backup.json";
+
+ a.click();
+
+ URL.revokeObjectURL(url);
+
+ toast("Data berhasil diexport");
+
+}
+
+
+/* =====================================================
+ RESET
+===================================================== */
+
+function resetData(){
+
+ if(!confirm(
+ `PERINGATAN!
+
+Semua data TravelKu akan dikembalikan ke data demo.
+
+Lanjutkan?`
+ ))return;
+
+ localStorage.removeItem("travelku_database");
+
+ location.reload();
+
+}
+
+
+/* =====================================================
+ CLOSE MODAL CLICK OUTSIDE
+===================================================== */
+
+document.querySelectorAll(".modal")
+.forEach(modal=>{
+
+ modal.addEventListener("click",e=>{
+
+  if(e.target===modal){
+   modal.classList.remove("show");
+  }
+
+ });
+
+});
+
+
+/* =====================================================
+ INIT
+===================================================== */
+
+function init(){
+
+ loadData();
+
+ setupDates();
+
+ loadDark();
+
+ applySettings();
+
+ renderHome();
+
+ updateWishCount();
+
+ updateAuthUI();
+
+ renderAdmin();
+
+ setTimeout(()=>{
+
+  document.getElementById("loader").style.display="none";
+
+ },600);
+
+ setInterval(countdown,1000);
+
+ countdown();
+
+}
+
+init();
+
+</script>
+
+</body>
+</html>
